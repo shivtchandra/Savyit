@@ -1314,20 +1314,19 @@ class TransactionProvider extends ChangeNotifier {
             '[PREV] First SMS: ${first.substring(0, first.length > 80 ? 80 : first.length)}…\n';
       }
 
-      // Step 3: OpenAI when API key is set; otherwise local-only.
-      final apiKey = await OpenAIService.getApiKey();
+      // Step 3: Cloud AI when signed in (Vercel proxy + Firebase); otherwise local-only.
+      final useCloudAi = OpenAIService.canUseCloudAi;
       List<Transaction> parsedTxns = [];
       LocalParseResult? parseResult;
       _lastScanUsedOpenAi = false;
 
-      if (apiKey != null && apiKey.isNotEmpty) {
+      if (useCloudAi) {
         _progressLabel =
             'Parsing SMS with OpenAI (${OpenAIService.chatModel})…';
         notifyListeners();
         try {
           parsedTxns = await OpenAIService.classify(
             candidates: candidates,
-            apiKey: apiKey,
             onProgress: (done, total) {
               _progressLabel = 'OpenAI SMS… $done / $total';
               notifyListeners();
@@ -1358,7 +1357,7 @@ class TransactionProvider extends ChangeNotifier {
         }
       } else {
         _debugInfo +=
-            '[KEY] No OpenAI key — local parser only.\n';
+            '[KEY] Not signed in — cloud AI unavailable; local parser only.\n';
         _progressLabel = 'Parsing transactions locally…';
         notifyListeners();
         final local =
@@ -1455,12 +1454,11 @@ class TransactionProvider extends ChangeNotifier {
       _progressTotal = segments.length;
       notifyListeners();
 
-      final apiKey = await OpenAIService.getApiKey();
-      if (apiKey == null || apiKey.isEmpty) {
+      if (!OpenAIService.canUseCloudAi) {
         _state = LoadState.error;
         _error =
-            'PDF import needs an OpenAI API key on this build. Use Settings → Export Data → CSV instead.';
-        _debugInfo += '[ERROR] No API key for PDF parsing\n';
+            'PDF AI import needs you to be signed in (Firebase). Sign in from Profile, then try again — or use Export Data → CSV.';
+        _debugInfo += '[ERROR] Not signed in — PDF cloud AI unavailable\n';
         notifyListeners();
         return;
       }
@@ -1476,7 +1474,6 @@ class TransactionProvider extends ChangeNotifier {
         try {
           final txns = await OpenAIService.classifyText(
             text: segment.text,
-            apiKey: apiKey,
             onStatus: (status) {
               _progressLabel = 'Chunk ${i + 1}/${segments.length}: $status';
               notifyListeners();

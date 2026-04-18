@@ -1,7 +1,8 @@
 // lib/services/openai_service.dart
-// PDF / SMS classification via OpenAI Chat Completions.
+// PDF / SMS classification via OpenAI Chat Completions (proxied through Vercel + Firebase).
 
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/transaction.dart';
@@ -9,11 +10,21 @@ import '../models/sms_candidate.dart';
 
 class OpenAIService {
   static const _prefsKey = 'openai_api_key';
-  /// Chat model for SMS, PDF, and validation (user-requested mini variant).
-  static const String chatModel = 'gpt-5.2-mini';
-  static const _url = 'https://api.openai.com/v1/chat/completions';
 
-  /// User-provided key only (Settings). Never bundled in the app.
+  /// Chat model (must be allowed on your OpenAI account; passed to the proxy).
+  static const String chatModel = 'gpt-5.2-mini';
+
+  /// Production OpenAI proxy (Vercel). Uses Firebase ID token — no app-bundled API key.
+  static const String cloudProxyBaseUrl = 'https://savyit-2ntk.vercel.app';
+
+  static Uri get _proxyChatUri =>
+      Uri.parse('$cloudProxyBaseUrl/api/chat');
+
+  /// True when a Firebase user is signed in (required for cloud AI).
+  static bool get canUseCloudAi =>
+      FirebaseAuth.instance.currentUser != null;
+
+  /// User-provided key (legacy / optional). Cloud AI does not use this.
   static Future<String?> getApiKey() async {
     final prefs = await SharedPreferences.getInstance();
     final key = prefs.getString(_prefsKey)?.trim();
@@ -21,7 +32,6 @@ class OpenAIService {
     return key;
   }
 
-  /// Save API key to local storage (device only — each install / user manages their own).
   static Future<void> saveApiKey(String key) async {
     final prefs = await SharedPreferences.getInstance();
     final t = key.trim();
@@ -32,28 +42,56 @@ class OpenAIService {
     await prefs.setString(_prefsKey, t);
   }
 
-  /// Remove stored key so the app uses local SMS rules only and PDF AI is disabled.
   static Future<void> clearApiKey() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_prefsKey);
   }
 
-  /// Validate the API key by making a small test request.
+  static void _ensureProxyOk(http.Response res) {
+    if (res.statusCode == 200) return;
+    final snippet = res.body.length > 400
+        ? '${res.body.substring(0, 400)}…'
+        : res.body;
+    throw Exception('AI proxy HTTP ${res.statusCode}: $snippet');
+  }
+
+  /// POST [messages] to Vercel proxy with Firebase ID token. Returns raw OpenAI-shaped JSON body.
+  static Future<http.Response> _chatViaProxy({
+    required List<Map<String, dynamic>> messages,
+    double? temperature,
+    int? maxTokens,
+  }) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception(
+        'Sign in to use AI. Cloud features need a Firebase account.',
+      );
+    }
+    final token = await user.getIdToken();
+    final body = <String, dynamic>{
+      'messages': messages,
+      'model': chatModel,
+      if (temperature != null) 'temperature': temperature,
+      if (maxTokens != null) 'max_tokens': maxTokens,
+    };
+    return http.post(
+      _proxyChatUri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(body),
+    );
+  }
+
+  /// Best-effort connectivity check (signed-in users only).
   static Future<bool> validateKey(String key) async {
     try {
-      final res = await http.post(
-        Uri.parse(_url),
-        headers: {
-          'Authorization': 'Bearer ${key.trim()}',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'model': chatModel,
-          'messages': [
-            {'role': 'user', 'content': 'Say OK'},
-          ],
-          'max_tokens': 5,
-        }),
+      final res = await _chatViaProxy(
+        messages: const [
+          {'role': 'user', 'content': 'Say OK'},
+        ],
+        maxTokens: 5,
       );
       return res.statusCode == 200;
     } catch (_) {
@@ -62,10 +100,8 @@ class OpenAIService {
   }
 
   /// Classify transactions from raw text (e.g. PDF extraction).
-  /// Throws on error so the caller can surface the message.
   static Future<List<Transaction>> classifyText({
     required String text,
-    required String apiKey,
     void Function(String status)? onStatus,
   }) async {
     final trimmed = text.trim();
@@ -105,32 +141,20 @@ Rules:
 - If you cannot find any transactions, return an empty array [].''';
 
     try {
-      final res = await http.post(
-        Uri.parse(_url),
-        headers: {
-          'Authorization': 'Bearer $apiKey',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'model': chatModel,
-          'messages': [
-            {'role': 'system', 'content': systemPrompt},
-            {
-              'role': 'user',
-              'content':
-                  'Extract all transactions from this statement text:\n\n$trimmed'
-            },
-          ],
-          'temperature': 0.0,
-          'max_tokens':
-              4000, // Reduced from 16000 to avoid excessive output that might truncate anyway
-        }),
+      final res = await _chatViaProxy(
+        messages: [
+          {'role': 'system', 'content': systemPrompt},
+          {
+            'role': 'user',
+            'content':
+                'Extract all transactions from this statement text:\n\n$trimmed',
+          },
+        ],
+        temperature: 0.0,
+        maxTokens: 4000,
       );
 
-      if (res.statusCode != 200) {
-        throw Exception(
-            'API error ${res.statusCode}: ${res.body.substring(0, res.body.length > 200 ? 200 : res.body.length)}');
-      }
+      _ensureProxyOk(res);
 
       onStatus?.call('Parsing AI response…');
       return _parseJsonResponse(res.body, null);
@@ -166,7 +190,7 @@ Rules:
       String responseBody, DateTime? fallbackDate) {
     Map<String, dynamic> data;
     try {
-      data = jsonDecode(responseBody);
+      data = jsonDecode(responseBody) as Map<String, dynamic>;
     } catch (e) {
       throw FormatException('Invalid response from AI API: $e');
     }
@@ -176,7 +200,6 @@ Rules:
     if (content.isEmpty) return [];
 
     String jsonStr = content.trim();
-    // Remove markdown code fences if present
     if (jsonStr.contains('```')) {
       final match =
           RegExp(r'```(?:json)?\s*([\s\S]*?)\s*```').firstMatch(jsonStr);
@@ -190,7 +213,6 @@ Rules:
     }
     jsonStr = jsonStr.trim();
 
-    // Strategy: find the first '[' and last ']' to isolate the array
     final startBracket = jsonStr.indexOf('[');
     final endBracket = jsonStr.lastIndexOf(']');
     if (startBracket != -1 && endBracket != -1 && endBracket > startBracket) {
@@ -201,15 +223,12 @@ Rules:
     try {
       parsed = jsonDecode(jsonStr) as List<dynamic>;
     } catch (_) {
-      // Recovery for truncated JSON
-      // Find the last "}," and cap it with "]"
       final lastCommaBrace = jsonStr.lastIndexOf('},');
       if (lastCommaBrace > 0) {
         try {
           parsed = jsonDecode('${jsonStr.substring(0, lastCommaBrace + 1)}]')
               as List<dynamic>;
         } catch (e2) {
-          // One last try: last "}"
           final lastBrace = jsonStr.lastIndexOf('}');
           if (lastBrace > 0) {
             try {
@@ -220,11 +239,11 @@ Rules:
             }
           } else {
             throw FormatException(
-                'Invalid JSON structure and no recovery possible.');
+                'Invalid JSON structure and no recovery possible.',
+            );
           }
         }
       } else {
-        // Maybe only one object and it's truncated? Just return empty or throw
         throw FormatException('Truncated or invalid JSON array');
       }
     }
@@ -240,7 +259,7 @@ Rules:
       DateTime date;
       if (item['date'] != null) {
         try {
-          date = DateTime.parse(item['date']);
+          date = DateTime.parse(item['date'] as String);
         } catch (_) {
           date = fallbackDate ?? DateTime.now();
         }
@@ -265,10 +284,8 @@ Rules:
     return txns;
   }
 
-  /// Classify a batch of SMS texts into transactions.
   static Future<List<Transaction>> classify({
     required List<SmsCandidate> candidates,
-    required String apiKey,
     void Function(int completed, int total)? onProgress,
   }) async {
     final results = <Transaction>[];
@@ -285,7 +302,7 @@ Rules:
 
     int completed = 0;
     for (final batch in batches) {
-      final batchResults = await _classifySmsBatch(batch, apiKey);
+      final batchResults = await _classifySmsBatch(batch);
       results.addAll(batchResults);
       completed += batch.length;
       onProgress?.call(completed, candidates.length);
@@ -296,7 +313,6 @@ Rules:
 
   static Future<List<Transaction>> _classifySmsBatch(
     List<SmsCandidate> batch,
-    String apiKey,
   ) async {
     final numberedMessages = batch
         .asMap()
@@ -308,31 +324,20 @@ Rules:
         '${_getSystemPrompt()}\nRespond with an array where each object also includes "index": number.';
 
     try {
-      final res = await http.post(
-        Uri.parse(_url),
-        headers: {
-          'Authorization': 'Bearer $apiKey',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'model': chatModel,
-          'messages': [
-            {'role': 'system', 'content': systemPrompt},
-            {'role': 'user', 'content': numberedMessages},
-          ],
-          'temperature': 0.1,
-          'max_tokens': 4096,
-        }),
+      final res = await _chatViaProxy(
+        messages: [
+          {'role': 'system', 'content': systemPrompt},
+          {'role': 'user', 'content': numberedMessages},
+        ],
+        temperature: 0.1,
+        maxTokens: 4096,
       );
 
-      if (res.statusCode != 200) {
-        final snippet = res.body.length > 400 ? '${res.body.substring(0, 400)}…' : res.body;
-        throw Exception('OpenAI HTTP ${res.statusCode}: $snippet');
-      }
+      _ensureProxyOk(res);
 
-      // We need to slightly adjust parsing because SMS has candidates with IDs
       final data = jsonDecode(res.body) as Map<String, dynamic>;
-      final content = data['choices']?[0]?['message']?['content'] as String? ?? '';
+      final content =
+          data['choices']?[0]?['message']?['content'] as String? ?? '';
       if (content.isEmpty) return [];
 
       String jsonStr = content.trim();
@@ -358,6 +363,7 @@ Rules:
       final txns = <Transaction>[];
 
       for (final item in parsed) {
+        if (item is! Map) continue;
         if (item['is_transaction'] != true) continue;
 
         final rawIdx = item['index'];
@@ -374,7 +380,7 @@ Rules:
         DateTime date;
         if (item['date'] != null) {
           try {
-            date = DateTime.parse(item['date']);
+            date = DateTime.parse(item['date'] as String);
           } catch (_) {
             date = candidate.smsDate ?? DateTime.now();
           }
@@ -404,9 +410,6 @@ Rules:
     }
   }
 
-  /// Generate personalized financial insight based on user profile + spending data.
-  /// Returns a map with keys:
-  /// `verdict`, `status_icon`, `mood`, `mood_line`, `summary`, `wins`, `watchouts`, `tips`, `next_step`.
   static Future<Map<String, dynamic>> generateFinancialInsight({
     required Map<String, dynamic> userProfile,
     required double totalIncome,
@@ -417,9 +420,6 @@ Rules:
     required String period,
     Map<String, dynamic>? financialPlan,
   }) async {
-    final apiKey = await getApiKey();
-    if (apiKey == null) throw Exception('No API key found');
-
     final categories = categoryBreakdown.entries
         .map((e) => '${e.key}: ₹${e.value.toStringAsFixed(0)}')
         .join(', ');
@@ -483,30 +483,25 @@ Be warm and use their name. If they are young (18-27), be encouraging. If older,
 You MUST explicitly assess how they are progressing toward their dreams/goals based on current balance and whether they are aligned with their financial plan.''';
 
     try {
-      final res = await http.post(
-        Uri.parse(_url),
-        headers: {
-          'Authorization': 'Bearer $apiKey',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'model': chatModel,
-          'messages': [
-            {'role': 'user', 'content': prompt},
-          ],
-          'max_tokens': 500,
-          'temperature': 0.7,
-        }),
+      final res = await _chatViaProxy(
+        messages: [
+          {'role': 'user', 'content': prompt},
+        ],
+        maxTokens: 500,
+        temperature: 0.7,
       );
 
       if (res.statusCode != 200) {
         throw Exception('API error: ${res.statusCode}');
       }
 
-      final body = jsonDecode(res.body);
-      final content = body['choices'][0]['message']['content'] as String;
+      final body = jsonDecode(res.body) as Map<String, dynamic>;
+      final content = body['choices']?[0]?['message']?['content'] as String?;
 
-      // Clean up potential markdown fences
+      if (content == null || content.isEmpty) {
+        throw Exception('Empty AI response');
+      }
+
       String cleaned = content.trim();
       if (cleaned.startsWith('```')) {
         cleaned = cleaned
