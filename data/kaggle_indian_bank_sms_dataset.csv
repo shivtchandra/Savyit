@@ -1,0 +1,199 @@
+id,country,currency,language,bank,channel,raw_sms,amount,txn_type,merchant,account_last4,is_financial_transaction,label_category
+syn_0001,IN,INR,en,Axis,UPI_P2M,"INR 33.00 debited / A/c no. XX5089 / 09-04-26, 08:08:55 / UPI/P2M/609955063377/ROPPEN TRANSPORTATI / Not you? SMS BLOCKUPI Cust ID to 919951860002 / Axis Bank",33.0,debit,ROPPEN TRANSPORTATI,5089,1,upi_debit
+syn_0002,IN,INR,en,Axis,UPI_P2M,INR 309.28 debited / A/c no. XX5089 / UPI/P2M/153547358418/ZOMATO LIMITED / Not you? SMS BLOCKUPI Cust ID to 919951860002,309.28,debit,ZOMATO LIMITED,5089,1,upi_debit
+syn_0003,IN,INR,en,SBI,UPI,Dear UPI user A/C X4707 debited by 40.00 on date 09Apr26 trf to Mr Muthukumar R Refno 609914775933 If not u? call-1800111109-SBI,40.0,debit,Muthukumar R,4707,1,upi_debit
+syn_0004,IN,INR,en,SBI,NEFT,"Acct XX5678 credited with Rs 25,000.00 on 05-Apr-26 from NEFT HDFCBANK0001234-SBI",25000.0,credit,NEFT_INCOMING,5678,1,neft_credit
+syn_0005,IN,INR,en,HDFC,CARD,"Rs.1,250.50 debited from HDFC Bank Card 5XX9012 to AMAZON PAY on 12-Apr-26. Avl bal Rs 43210.00",1250.5,debit,AMAZON PAY,9012,1,card_debit
+syn_0006,IN,INR,en,HDFC,UPI,Sent Rs. 89.00 from HDFC Bank A/c **7788 to swiggy.in@ybl on 11-04-26. Ref 912345678901,89.0,debit,swiggy.in@ybl,7788,1,upi_debit
+syn_0007,IN,INR,en,ICICI,UPI,ICICI Bank Acct XX1234 debited for INR 499.00 on 10-Apr-26. Info: BIGBASKET VPA bigbasket@icici Ref 887766554433,499.0,debit,BIGBASKET,1234,1,upi_debit
+syn_0008,IN,INR,en,ICICI,IMPS,Your ICICI Bank A/c XX9988 is credited with Rs. 15000.00 on 01-Apr-26 by IMPS from JOHN D Ref IMPS123456789,15000.0,credit,JOHN D,9988,1,imps_credit
+syn_0009,IN,INR,en,Kotak,UPI,INR 175.00 debited from Kotak Bank A/c **5566 on 08-04-26 for UPI txn to zomato@paytm Ref 445566778899,175.0,debit,zomato@paytm,5566,1,upi_debit
+syn_0010,IN,INR,en,Yes Bank,UPI,"YES BANK: INR 2,100.00 debited from A/c XXXX2211 towards UPI-PHONEPE PAYMENT Refno 334455667788 on 07Apr26",2100.0,debit,PHONEPE PAYMENT,2211,1,upi_debit
+syn_0011,IN,INR,en,IndusInd,CARD,IndusInd Bank: Rs 650.00 spent on your Card XX3344 at INOX LEISURE on 06-04-26. Avl Lmt Rs 98000,650.0,debit,INOX LEISURE,3344,1,card_debit
+syn_0012,IN,INR,en,PNB,UPI,PNB: A/c *4455 debited by Rs 120.00 on 05-04-26 UPI/DR/987654321098/ZEPTO Ref UPIPNB998877,120.0,debit,ZEPTO,4455,1,upi_debit
+syn_0013,IN,INR,en,BOB,NEFT,"Bank of Baroda: Your A/c XX8877 credited with Rs 8,500.00 on 04-04-26 thru NEFT from ACME CORP Ref NEFTBOB112233",8500.0,credit,ACME CORP,8877,1,neft_credit
+syn_0014,IN,INR,en,Canara,UPI,CANARA BANK: Rs.55.00 debited from A/c XX6655 towards UPI payment to irctc@axis Ref 223344556677 on 03Apr26,55.0,debit,irctc@axis,6655,1,upi_debit
+syn_0015,IN,INR,en,Union Bank,ATM,Union Bank of India: Cash withdrawal of Rs 2000.00 from A/c **4433 at ATM ID UBIN0001234 on 02-04-26,2000.0,debit,ATM_WITHDRAWAL,4433,1,atm_debit
+syn_0016,IN,INR,en,IDFC First,UPI,IDFC FIRST Bank: INR 320.00 debited from A/c XX1199 for UPI to merchant@okhdfcbank Ref 556677889900 on 01Apr26,320.0,debit,merchant@okhdfcbank,1199,1,upi_debit
+syn_0017,IN,INR,en,Federal,UPI,Federal Bank: Rs 45.00 debited from A/c **7781 UPI txn to googlepay@okaxis Ref 667788990011 dt 31-Mar-26,45.0,debit,googlepay@okaxis,7781,1,upi_debit
+syn_0018,IN,INR,en,RBL,CARD,RBL Bank: Transaction of Rs 1299.00 on your RBL Card XX0022 at FLIPKART on 30-03-26,1299.0,debit,FLIPKART,0022,1,card_debit
+syn_0019,IN,INR,en,AU Bank,UPI,AU SFB: INR 500.00 debited from A/c XX3344 via UPI to paytmqr281@paytm Ref 445566778899 on 29Mar26,500.0,debit,paytmqr281@paytm,3344,1,upi_debit
+syn_0020,IN,INR,en,Indian Bank,UPI,INDIAN BANK: Your A/c XX5566 is debited for Rs 75.00 on 28-03-26 UPI to billdesk@hdfcbank Ref 998877665544,75.0,debit,billdesk@hdfcbank,5566,1,upi_debit
+syn_0021,IN,INR,en,Bank of India,NEFT,BOI: Acct XX8877 credited Rs 4200.00 on 27-Mar-26 NEFT from RAHUL KUMAR Ref NEFTBOI887766,4200.0,credit,RAHUL KUMAR,8877,1,neft_credit
+syn_0022,IN,INR,en,Central Bank of India,UPI,CBI: Rs 30.00 debited from A/c **2233 UPI P2M to NPCI*uber on 26-03-26 Ref UPI223344556677,30.0,debit,NPCI*uber,2233,1,upi_debit
+syn_0023,IN,INR,en,UCO Bank,UPI,UCO BANK: A/c XX4411 debited by INR 220.00 on 25Mar26 UPI to blinkit@ybl Ref 334455667788,220.0,debit,blinkit@ybl,4411,1,upi_debit
+syn_0024,IN,INR,en,DBS,UPI,DBS: INR 99.00 debited from Savings XX9900 on 24-03-26. Payee: NETFLIX.COM UPI Ref 887766554433,99.0,debit,NETFLIX.COM,9900,1,upi_debit
+syn_0025,IN,INR,en,HSBC,CARD,"HSBC IN: Rs 3,450.00 charged to your Credit Card XX1122 at RELIANCE SMART on 23-Mar-26",3450.0,debit,RELIANCE SMART,1122,1,card_debit
+syn_0026,IN,INR,en,Bandhan Bank,UPI,Bandhan Bank: Rs 15.00 debited from A/c **6677 UPI to npci*metro on 22-03-26 Ref BBUPI998877,15.0,debit,npci*metro,6677,1,upi_debit
+syn_0027,IN,INR,en,Karnataka Bank,UPI,KBL: INR 180.00 debited from SB A/c XX5544 for UPI to swiggy@ibl Ref 223344556677 dt 21Mar26,180.0,debit,swiggy@ibl,5544,1,upi_debit
+syn_0028,IN,INR,en,South Indian Bank,UPI,SIB: Your A/c XX3322 debited Rs 950.00 on 20-03-26 UPI P2M to BOOKMYSHOW Ref SIBUPI445566,950.0,debit,BOOKMYSHOW,3322,1,upi_debit
+syn_0029,IN,INR,en,TMB,UPI,TMB: Rs 60.00 debited from A/c **8877 UPI to phonepe@ybl Ref TMBUPI7788990011 on 19Mar26,60.0,debit,phonepe@ybl,8877,1,upi_debit
+syn_0030,IN,INR,en,City Union Bank,UPI,CUB: INR 240.00 debited from A/c XX6655 towards UPI txn to ola@ybl Ref CUBUPI3344556677,240.0,debit,ola@ybl,6655,1,upi_debit
+syn_0031,IN,INR,en,Paytm Payments Bank,UPI,Paytm Payments Bank: Rs 35.00 debited from PPBL A/c **2211 for UPI to merchant@paytm Ref PPBL9988776655,35.0,debit,merchant@paytm,2211,1,upi_debit
+syn_0032,IN,INR,en,Airtel Payments Bank,UPI,Airtel Payments Bank: INR 49.00 debited for UPI recharge txn Ref AIRTELPAY112233 on 18-03-26,49.0,debit,UPI_RECHARGE,,1,upi_debit
+syn_0033,IN,INR,en,Standard Chartered,CARD,"StanChart: Rs 2,899.00 debited on your Card XX5566 at CROMA on 17-Mar-26",2899.0,debit,CROMA,5566,1,card_debit
+syn_0034,IN,INR,en,Citibank,CARD,CITI: INR 1250.00 spent on Citi Card ending 7788 at NYKAA on 16Mar26,1250.0,debit,NYKAA,7788,1,card_debit
+syn_0035,IN,INR,en,RBL,CARD,Bajaj Finserv RBL Card: Rs 599.00 transaction at AMAZON on 15-03-26 on card XX4433,599.0,debit,AMAZON,4433,1,card_debit
+syn_0036,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.500.00 debited from your A/c **8899 towards UPI txn to CRED@ybl Ref 223344556677 on 14Apr26,500.0,debit,CRED@ybl,8899,1,upi_debit
+syn_0037,IN,INR,en,ICICI,UPI,ICICI Bank: Your A/c XX6677 is credited for Rs. 1200.00 on 13-Apr-26 from googlepay@okaxis Ref 998877665544,1200.0,credit,googlepay@okaxis,6677,1,upi_credit
+syn_0038,IN,INR,en,Kotak,NEFT,Kotak: INR 85000.00 credited to A/c **3344 on 12Apr26 from SALARY CREDIT ACME LTD Ref NEFTKOT998877,85000.0,credit,ACME LTD,3344,1,salary_credit
+syn_0039,IN,INR,en,Axis,INTEREST,Axis Bank: Rs 112.34 credited to A/c XX5089 towards interest for 01Jan26-31Mar26 Ref INTAXIS887766,112.34,credit,INTEREST_CREDIT,5089,1,interest_credit
+syn_0040,IN,INR,en,,OTP,HDFC Bank: 482910 is your OTP for txn of Rs 5000.00. Do not share OTP with anyone.,5000.0,unknown,,,0,otp
+syn_0041,IN,INR,en,,PROMO,Flipkart: Flat 40% OFF on electronics! Use code SAVE40. Shop now. T&C apply.,0.0,unknown,,,0,promotional
+syn_0042,IN,INR,en,SBI,BALANCE,SBI: Your A/c XX5678 balance is Rs 12345.67 as on 10-Apr-26. For disputes call 1800112211,0.0,unknown,,5678,0,balance_enquiry
+syn_0043,IN,INR,en,ICICI,ALERT,"ICICI Bank: Your registered mobile number was updated successfully on 09-Apr-26. If not you, call customer care.",0.0,unknown,,,0,service_alert
+syn_0044,IN,INR,en,J&K Bank,UPI,JK BANK: Rs 88.00 debited from A/c XX7722 UPI to qrcode@ybl Ref JKUPI556677 on 10Mar26,88.0,debit,qrcode@ybl,7722,1,upi_debit
+syn_0045,IN,INR,en,KVB,UPI,KVB: INR 155.00 debited from SB A/c **8899 towards UPI to dominos@ibl Ref KVBUPI334455,155.0,debit,dominos@ibl,8899,1,upi_debit
+syn_0046,IN,INR,en,Dhanlaxmi Bank,UPI,DLB: Your A/c XX4455 debited Rs 42.00 on 09Mar26 UPI txn to npci*rapido Ref DLBUPI887766,42.0,debit,npci*rapido,4455,1,upi_debit
+syn_0047,IN,INR,en,Equitas SFB,UPI,Equitas SFB: INR 199.00 debited from A/c **6677 UPI P2M to jiomart@paytm Ref EQTS998877,199.0,debit,jiomart@paytm,6677,1,upi_debit
+syn_0048,IN,INR,en,Ujjivan SFB,UPI,Ujjivan SFB: Rs 25.00 debited from A/c XX3344 for UPI to npci*fastag Ref UJVN112233,25.0,debit,npci*fastag,3344,1,upi_debit
+syn_0049,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.27.37 debited from A/c **1137 to SHOP1 on 01-Apr-26,27.37,debit,SHOP1,1137,1,synthetic_spin
+syn_0050,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX1274 debited for INR 44.74 on 02-Apr-26 Info: CAFE2 Ref 200002,44.74,debit,CAFE2,1274,1,synthetic_spin
+syn_0051,IN,INR,en,SBI,UPI,Dear UPI user A/C X1411 debited by 62.11 on date 04Apr26 trf to Mr TESTPAYEE3 Refno 600000003 SBI,62.11,debit,TESTPAYEE3,1411,1,synthetic_spin
+syn_0052,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX1548 debited for INR 79.48 on 02-Apr-26 Info: CAFE4 Ref 200004,79.48,debit,CAFE4,1548,1,synthetic_spin
+syn_0053,IN,INR,en,PNB,UPI,PNB: A/c **1685 debited Rs 96.85 on 03-Apr-26 UPI to MERCHANT5@ybl Ref 300000005,96.85,debit,MERCHANT5@ybl,1685,1,synthetic_spin
+syn_0054,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **1822 debited Rs 114.22 on 03-Apr-26 UPI to MERCHANT6@ybl Ref 300000006,114.22,debit,MERCHANT6@ybl,1822,1,synthetic_spin
+syn_0055,IN,INR,en,Canara,UPI,CANARA BANK: A/c **1959 debited Rs 131.59 on 03-Apr-26 UPI to MERCHANT7@ybl Ref 300000007,131.59,debit,MERCHANT7@ybl,1959,1,synthetic_spin
+syn_0056,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **2096 debited Rs 148.96 on 03-Apr-26 UPI to MERCHANT8@ybl Ref 300000008,148.96,debit,MERCHANT8@ybl,2096,1,synthetic_spin
+syn_0057,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **2233 debited Rs 166.33 on 03-Apr-26 UPI to MERCHANT9@ybl Ref 300000009,166.33,debit,MERCHANT9@ybl,2233,1,synthetic_spin
+syn_0058,IN,INR,en,Axis,UPI_P2M,INR 183.70 debited / A/c no. XX2370 / UPI/P2M/900000010/TESTMERCHANT10 / Not you? SMS BLOCKUPI / Axis Bank,183.7,debit,TESTMERCHANT10,2370,1,synthetic_spin
+syn_0059,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.201.07 debited from A/c **2507 to SHOP11 on 01-Apr-26,201.07,debit,SHOP11,2507,1,synthetic_spin
+syn_0060,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX2644 debited for INR 218.44 on 02-Apr-26 Info: CAFE12 Ref 200012,218.44,debit,CAFE12,2644,1,synthetic_spin
+syn_0061,IN,INR,en,SBI,UPI,Dear UPI user A/C X2781 debited by 235.81 on date 14Apr26 trf to Mr TESTPAYEE13 Refno 600000013 SBI,235.81,debit,TESTPAYEE13,2781,1,synthetic_spin
+syn_0062,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX2918 debited for INR 253.18 on 02-Apr-26 Info: CAFE14 Ref 200014,253.18,debit,CAFE14,2918,1,synthetic_spin
+syn_0063,IN,INR,en,PNB,UPI,PNB: A/c **3055 debited Rs 270.55 on 03-Apr-26 UPI to MERCHANT15@ybl Ref 300000015,270.55,debit,MERCHANT15@ybl,3055,1,synthetic_spin
+syn_0064,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **3192 debited Rs 287.92 on 03-Apr-26 UPI to MERCHANT16@ybl Ref 300000016,287.92,debit,MERCHANT16@ybl,3192,1,synthetic_spin
+syn_0065,IN,INR,en,Canara,UPI,CANARA BANK: A/c **3329 debited Rs 305.29 on 03-Apr-26 UPI to MERCHANT17@ybl Ref 300000017,305.29,debit,MERCHANT17@ybl,3329,1,synthetic_spin
+syn_0066,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **3466 debited Rs 322.66 on 03-Apr-26 UPI to MERCHANT18@ybl Ref 300000018,322.66,debit,MERCHANT18@ybl,3466,1,synthetic_spin
+syn_0067,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **3603 debited Rs 340.03 on 03-Apr-26 UPI to MERCHANT19@ybl Ref 300000019,340.03,debit,MERCHANT19@ybl,3603,1,synthetic_spin
+syn_0068,IN,INR,en,Axis,UPI_P2M,INR 357.40 debited / A/c no. XX3740 / UPI/P2M/900000020/TESTMERCHANT20 / Not you? SMS BLOCKUPI / Axis Bank,357.4,debit,TESTMERCHANT20,3740,1,synthetic_spin
+syn_0069,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.374.77 debited from A/c **3877 to SHOP21 on 01-Apr-26,374.77,debit,SHOP21,3877,1,synthetic_spin
+syn_0070,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX4014 debited for INR 392.14 on 02-Apr-26 Info: CAFE22 Ref 200022,392.14,debit,CAFE22,4014,1,synthetic_spin
+syn_0071,IN,INR,en,SBI,UPI,Dear UPI user A/C X4151 debited by 409.51 on date 24Apr26 trf to Mr TESTPAYEE23 Refno 600000023 SBI,409.51,debit,TESTPAYEE23,4151,1,synthetic_spin
+syn_0072,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX4288 debited for INR 426.88 on 02-Apr-26 Info: CAFE24 Ref 200024,426.88,debit,CAFE24,4288,1,synthetic_spin
+syn_0073,IN,INR,en,PNB,UPI,PNB: A/c **4425 debited Rs 444.25 on 03-Apr-26 UPI to MERCHANT25@ybl Ref 300000025,444.25,debit,MERCHANT25@ybl,4425,1,synthetic_spin
+syn_0074,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **4562 debited Rs 461.62 on 03-Apr-26 UPI to MERCHANT26@ybl Ref 300000026,461.62,debit,MERCHANT26@ybl,4562,1,synthetic_spin
+syn_0075,IN,INR,en,Canara,UPI,CANARA BANK: A/c **4699 debited Rs 478.99 on 03-Apr-26 UPI to MERCHANT27@ybl Ref 300000027,478.99,debit,MERCHANT27@ybl,4699,1,synthetic_spin
+syn_0076,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **4836 debited Rs 496.36 on 03-Apr-26 UPI to MERCHANT28@ybl Ref 300000028,496.36,debit,MERCHANT28@ybl,4836,1,synthetic_spin
+syn_0077,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **4973 debited Rs 513.73 on 03-Apr-26 UPI to MERCHANT29@ybl Ref 300000029,513.73,debit,MERCHANT29@ybl,4973,1,synthetic_spin
+syn_0078,IN,INR,en,Axis,UPI_P2M,INR 531.10 debited / A/c no. XX5110 / UPI/P2M/900000030/TESTMERCHANT30 / Not you? SMS BLOCKUPI / Axis Bank,531.1,debit,TESTMERCHANT30,5110,1,synthetic_spin
+syn_0079,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.548.47 debited from A/c **5247 to SHOP31 on 01-Apr-26,548.47,debit,SHOP31,5247,1,synthetic_spin
+syn_0080,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX5384 debited for INR 565.84 on 02-Apr-26 Info: CAFE32 Ref 200032,565.84,debit,CAFE32,5384,1,synthetic_spin
+syn_0081,IN,INR,en,SBI,UPI,Dear UPI user A/C X5521 debited by 583.21 on date 06Apr26 trf to Mr TESTPAYEE33 Refno 600000033 SBI,583.21,debit,TESTPAYEE33,5521,1,synthetic_spin
+syn_0082,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX5658 debited for INR 600.58 on 02-Apr-26 Info: CAFE34 Ref 200034,600.58,debit,CAFE34,5658,1,synthetic_spin
+syn_0083,IN,INR,en,PNB,UPI,PNB: A/c **5795 debited Rs 617.95 on 03-Apr-26 UPI to MERCHANT35@ybl Ref 300000035,617.95,debit,MERCHANT35@ybl,5795,1,synthetic_spin
+syn_0084,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **5932 debited Rs 635.32 on 03-Apr-26 UPI to MERCHANT36@ybl Ref 300000036,635.32,debit,MERCHANT36@ybl,5932,1,synthetic_spin
+syn_0085,IN,INR,en,Canara,UPI,CANARA BANK: A/c **6069 debited Rs 652.69 on 03-Apr-26 UPI to MERCHANT37@ybl Ref 300000037,652.69,debit,MERCHANT37@ybl,6069,1,synthetic_spin
+syn_0086,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **6206 debited Rs 670.06 on 03-Apr-26 UPI to MERCHANT38@ybl Ref 300000038,670.06,debit,MERCHANT38@ybl,6206,1,synthetic_spin
+syn_0087,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **6343 debited Rs 687.43 on 03-Apr-26 UPI to MERCHANT39@ybl Ref 300000039,687.43,debit,MERCHANT39@ybl,6343,1,synthetic_spin
+syn_0088,IN,INR,en,Axis,UPI_P2M,INR 704.80 debited / A/c no. XX6480 / UPI/P2M/900000040/TESTMERCHANT40 / Not you? SMS BLOCKUPI / Axis Bank,704.8,debit,TESTMERCHANT40,6480,1,synthetic_spin
+syn_0089,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.722.17 debited from A/c **6617 to SHOP41 on 01-Apr-26,722.17,debit,SHOP41,6617,1,synthetic_spin
+syn_0090,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX6754 debited for INR 739.54 on 02-Apr-26 Info: CAFE42 Ref 200042,739.54,debit,CAFE42,6754,1,synthetic_spin
+syn_0091,IN,INR,en,SBI,UPI,Dear UPI user A/C X6891 debited by 756.91 on date 16Apr26 trf to Mr TESTPAYEE43 Refno 600000043 SBI,756.91,debit,TESTPAYEE43,6891,1,synthetic_spin
+syn_0092,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX7028 debited for INR 774.28 on 02-Apr-26 Info: CAFE44 Ref 200044,774.28,debit,CAFE44,7028,1,synthetic_spin
+syn_0093,IN,INR,en,PNB,UPI,PNB: A/c **7165 debited Rs 791.65 on 03-Apr-26 UPI to MERCHANT45@ybl Ref 300000045,791.65,debit,MERCHANT45@ybl,7165,1,synthetic_spin
+syn_0094,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **7302 debited Rs 809.02 on 03-Apr-26 UPI to MERCHANT46@ybl Ref 300000046,809.02,debit,MERCHANT46@ybl,7302,1,synthetic_spin
+syn_0095,IN,INR,en,Canara,UPI,CANARA BANK: A/c **7439 debited Rs 826.39 on 03-Apr-26 UPI to MERCHANT47@ybl Ref 300000047,826.39,debit,MERCHANT47@ybl,7439,1,synthetic_spin
+syn_0096,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **7576 debited Rs 843.76 on 03-Apr-26 UPI to MERCHANT48@ybl Ref 300000048,843.76,debit,MERCHANT48@ybl,7576,1,synthetic_spin
+syn_0097,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **7713 debited Rs 861.13 on 03-Apr-26 UPI to MERCHANT49@ybl Ref 300000049,861.13,debit,MERCHANT49@ybl,7713,1,synthetic_spin
+syn_0098,IN,INR,en,Axis,UPI_P2M,INR 878.50 debited / A/c no. XX7850 / UPI/P2M/900000050/TESTMERCHANT50 / Not you? SMS BLOCKUPI / Axis Bank,878.5,debit,TESTMERCHANT50,7850,1,synthetic_spin
+syn_0099,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.895.87 debited from A/c **7987 to SHOP51 on 01-Apr-26,895.87,debit,SHOP51,7987,1,synthetic_spin
+syn_0100,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX8124 debited for INR 913.24 on 02-Apr-26 Info: CAFE52 Ref 200052,913.24,debit,CAFE52,8124,1,synthetic_spin
+syn_0101,IN,INR,en,SBI,UPI,Dear UPI user A/C X8261 debited by 930.61 on date 26Apr26 trf to Mr TESTPAYEE53 Refno 600000053 SBI,930.61,debit,TESTPAYEE53,8261,1,synthetic_spin
+syn_0102,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX8398 debited for INR 947.98 on 02-Apr-26 Info: CAFE54 Ref 200054,947.98,debit,CAFE54,8398,1,synthetic_spin
+syn_0103,IN,INR,en,PNB,UPI,PNB: A/c **8535 debited Rs 965.35 on 03-Apr-26 UPI to MERCHANT55@ybl Ref 300000055,965.35,debit,MERCHANT55@ybl,8535,1,synthetic_spin
+syn_0104,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **8672 debited Rs 982.72 on 03-Apr-26 UPI to MERCHANT56@ybl Ref 300000056,982.72,debit,MERCHANT56@ybl,8672,1,synthetic_spin
+syn_0105,IN,INR,en,Canara,UPI,CANARA BANK: A/c **8809 debited Rs 1000.09 on 03-Apr-26 UPI to MERCHANT57@ybl Ref 300000057,1000.09,debit,MERCHANT57@ybl,8809,1,synthetic_spin
+syn_0106,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **8946 debited Rs 1017.46 on 03-Apr-26 UPI to MERCHANT58@ybl Ref 300000058,1017.46,debit,MERCHANT58@ybl,8946,1,synthetic_spin
+syn_0107,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **9083 debited Rs 1034.83 on 03-Apr-26 UPI to MERCHANT59@ybl Ref 300000059,1034.83,debit,MERCHANT59@ybl,9083,1,synthetic_spin
+syn_0108,IN,INR,en,Axis,UPI_P2M,INR 1052.20 debited / A/c no. XX9220 / UPI/P2M/900000060/TESTMERCHANT60 / Not you? SMS BLOCKUPI / Axis Bank,1052.2,debit,TESTMERCHANT60,9220,1,synthetic_spin
+syn_0109,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.1069.57 debited from A/c **9357 to SHOP61 on 01-Apr-26,1069.57,debit,SHOP61,9357,1,synthetic_spin
+syn_0110,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX9494 debited for INR 1086.94 on 02-Apr-26 Info: CAFE62 Ref 200062,1086.94,debit,CAFE62,9494,1,synthetic_spin
+syn_0111,IN,INR,en,SBI,UPI,Dear UPI user A/C X9631 debited by 1104.31 on date 08Apr26 trf to Mr TESTPAYEE63 Refno 600000063 SBI,1104.31,debit,TESTPAYEE63,9631,1,synthetic_spin
+syn_0112,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX9768 debited for INR 1121.68 on 02-Apr-26 Info: CAFE64 Ref 200064,1121.68,debit,CAFE64,9768,1,synthetic_spin
+syn_0113,IN,INR,en,PNB,UPI,PNB: A/c **9905 debited Rs 1139.05 on 03-Apr-26 UPI to MERCHANT65@ybl Ref 300000065,1139.05,debit,MERCHANT65@ybl,9905,1,synthetic_spin
+syn_0114,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **0042 debited Rs 1156.42 on 03-Apr-26 UPI to MERCHANT66@ybl Ref 300000066,1156.42,debit,MERCHANT66@ybl,0042,1,synthetic_spin
+syn_0115,IN,INR,en,Canara,UPI,CANARA BANK: A/c **0179 debited Rs 1173.79 on 03-Apr-26 UPI to MERCHANT67@ybl Ref 300000067,1173.79,debit,MERCHANT67@ybl,0179,1,synthetic_spin
+syn_0116,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **0316 debited Rs 1191.16 on 03-Apr-26 UPI to MERCHANT68@ybl Ref 300000068,1191.16,debit,MERCHANT68@ybl,0316,1,synthetic_spin
+syn_0117,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **0453 debited Rs 1208.53 on 03-Apr-26 UPI to MERCHANT69@ybl Ref 300000069,1208.53,debit,MERCHANT69@ybl,0453,1,synthetic_spin
+syn_0118,IN,INR,en,Axis,UPI_P2M,INR 1225.90 debited / A/c no. XX0590 / UPI/P2M/900000070/TESTMERCHANT70 / Not you? SMS BLOCKUPI / Axis Bank,1225.9,debit,TESTMERCHANT70,0590,1,synthetic_spin
+syn_0119,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.1243.27 debited from A/c **0727 to SHOP71 on 01-Apr-26,1243.27,debit,SHOP71,0727,1,synthetic_spin
+syn_0120,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX0864 debited for INR 1260.64 on 02-Apr-26 Info: CAFE72 Ref 200072,1260.64,debit,CAFE72,0864,1,synthetic_spin
+syn_0121,IN,INR,en,SBI,UPI,Dear UPI user A/C X1001 debited by 1278.01 on date 18Apr26 trf to Mr TESTPAYEE73 Refno 600000073 SBI,1278.01,debit,TESTPAYEE73,1001,1,synthetic_spin
+syn_0122,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX1138 debited for INR 1295.38 on 02-Apr-26 Info: CAFE74 Ref 200074,1295.38,debit,CAFE74,1138,1,synthetic_spin
+syn_0123,IN,INR,en,PNB,UPI,PNB: A/c **1275 debited Rs 1312.75 on 03-Apr-26 UPI to MERCHANT75@ybl Ref 300000075,1312.75,debit,MERCHANT75@ybl,1275,1,synthetic_spin
+syn_0124,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **1412 debited Rs 1330.12 on 03-Apr-26 UPI to MERCHANT76@ybl Ref 300000076,1330.12,debit,MERCHANT76@ybl,1412,1,synthetic_spin
+syn_0125,IN,INR,en,Canara,UPI,CANARA BANK: A/c **1549 debited Rs 1347.49 on 03-Apr-26 UPI to MERCHANT77@ybl Ref 300000077,1347.49,debit,MERCHANT77@ybl,1549,1,synthetic_spin
+syn_0126,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **1686 debited Rs 1364.86 on 03-Apr-26 UPI to MERCHANT78@ybl Ref 300000078,1364.86,debit,MERCHANT78@ybl,1686,1,synthetic_spin
+syn_0127,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **1823 debited Rs 1382.23 on 03-Apr-26 UPI to MERCHANT79@ybl Ref 300000079,1382.23,debit,MERCHANT79@ybl,1823,1,synthetic_spin
+syn_0128,IN,INR,en,Axis,UPI_P2M,INR 1399.60 debited / A/c no. XX1960 / UPI/P2M/900000080/TESTMERCHANT80 / Not you? SMS BLOCKUPI / Axis Bank,1399.6,debit,TESTMERCHANT80,1960,1,synthetic_spin
+syn_0129,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.1416.97 debited from A/c **2097 to SHOP81 on 01-Apr-26,1416.97,debit,SHOP81,2097,1,synthetic_spin
+syn_0130,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX2234 debited for INR 1434.34 on 02-Apr-26 Info: CAFE82 Ref 200082,1434.34,debit,CAFE82,2234,1,synthetic_spin
+syn_0131,IN,INR,en,SBI,UPI,Dear UPI user A/C X2371 debited by 1451.71 on date 28Apr26 trf to Mr TESTPAYEE83 Refno 600000083 SBI,1451.71,debit,TESTPAYEE83,2371,1,synthetic_spin
+syn_0132,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX2508 debited for INR 1469.08 on 02-Apr-26 Info: CAFE84 Ref 200084,1469.08,debit,CAFE84,2508,1,synthetic_spin
+syn_0133,IN,INR,en,PNB,UPI,PNB: A/c **2645 debited Rs 1486.45 on 03-Apr-26 UPI to MERCHANT85@ybl Ref 300000085,1486.45,debit,MERCHANT85@ybl,2645,1,synthetic_spin
+syn_0134,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **2782 debited Rs 1503.82 on 03-Apr-26 UPI to MERCHANT86@ybl Ref 300000086,1503.82,debit,MERCHANT86@ybl,2782,1,synthetic_spin
+syn_0135,IN,INR,en,Canara,UPI,CANARA BANK: A/c **2919 debited Rs 1521.19 on 03-Apr-26 UPI to MERCHANT87@ybl Ref 300000087,1521.19,debit,MERCHANT87@ybl,2919,1,synthetic_spin
+syn_0136,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **3056 debited Rs 1538.56 on 03-Apr-26 UPI to MERCHANT88@ybl Ref 300000088,1538.56,debit,MERCHANT88@ybl,3056,1,synthetic_spin
+syn_0137,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **3193 debited Rs 1555.93 on 03-Apr-26 UPI to MERCHANT89@ybl Ref 300000089,1555.93,debit,MERCHANT89@ybl,3193,1,synthetic_spin
+syn_0138,IN,INR,en,Axis,UPI_P2M,INR 1573.30 debited / A/c no. XX3330 / UPI/P2M/900000090/TESTMERCHANT90 / Not you? SMS BLOCKUPI / Axis Bank,1573.3,debit,TESTMERCHANT90,3330,1,synthetic_spin
+syn_0139,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.1590.67 debited from A/c **3467 to SHOP91 on 01-Apr-26,1590.67,debit,SHOP91,3467,1,synthetic_spin
+syn_0140,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX3604 debited for INR 1608.04 on 02-Apr-26 Info: CAFE92 Ref 200092,1608.04,debit,CAFE92,3604,1,synthetic_spin
+syn_0141,IN,INR,en,SBI,UPI,Dear UPI user A/C X3741 debited by 1625.41 on date 10Apr26 trf to Mr TESTPAYEE93 Refno 600000093 SBI,1625.41,debit,TESTPAYEE93,3741,1,synthetic_spin
+syn_0142,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX3878 debited for INR 1642.78 on 02-Apr-26 Info: CAFE94 Ref 200094,1642.78,debit,CAFE94,3878,1,synthetic_spin
+syn_0143,IN,INR,en,PNB,UPI,PNB: A/c **4015 debited Rs 1660.15 on 03-Apr-26 UPI to MERCHANT95@ybl Ref 300000095,1660.15,debit,MERCHANT95@ybl,4015,1,synthetic_spin
+syn_0144,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **4152 debited Rs 1677.52 on 03-Apr-26 UPI to MERCHANT96@ybl Ref 300000096,1677.52,debit,MERCHANT96@ybl,4152,1,synthetic_spin
+syn_0145,IN,INR,en,Canara,UPI,CANARA BANK: A/c **4289 debited Rs 1694.89 on 03-Apr-26 UPI to MERCHANT97@ybl Ref 300000097,1694.89,debit,MERCHANT97@ybl,4289,1,synthetic_spin
+syn_0146,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **4426 debited Rs 1712.26 on 03-Apr-26 UPI to MERCHANT98@ybl Ref 300000098,1712.26,debit,MERCHANT98@ybl,4426,1,synthetic_spin
+syn_0147,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **4563 debited Rs 1729.63 on 03-Apr-26 UPI to MERCHANT99@ybl Ref 300000099,1729.63,debit,MERCHANT99@ybl,4563,1,synthetic_spin
+syn_0148,IN,INR,en,Axis,UPI_P2M,INR 1747.00 debited / A/c no. XX4700 / UPI/P2M/900000100/TESTMERCHANT100 / Not you? SMS BLOCKUPI / Axis Bank,1747.0,debit,TESTMERCHANT100,4700,1,synthetic_spin
+syn_0149,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.1764.37 debited from A/c **4837 to SHOP101 on 01-Apr-26,1764.37,debit,SHOP101,4837,1,synthetic_spin
+syn_0150,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX4974 debited for INR 1781.74 on 02-Apr-26 Info: CAFE102 Ref 200102,1781.74,debit,CAFE102,4974,1,synthetic_spin
+syn_0151,IN,INR,en,SBI,UPI,Dear UPI user A/C X5111 debited by 1799.11 on date 20Apr26 trf to Mr TESTPAYEE103 Refno 600000103 SBI,1799.11,debit,TESTPAYEE103,5111,1,synthetic_spin
+syn_0152,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX5248 debited for INR 1816.48 on 02-Apr-26 Info: CAFE104 Ref 200104,1816.48,debit,CAFE104,5248,1,synthetic_spin
+syn_0153,IN,INR,en,PNB,UPI,PNB: A/c **5385 debited Rs 1833.85 on 03-Apr-26 UPI to MERCHANT105@ybl Ref 300000105,1833.85,debit,MERCHANT105@ybl,5385,1,synthetic_spin
+syn_0154,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **5522 debited Rs 1851.22 on 03-Apr-26 UPI to MERCHANT106@ybl Ref 300000106,1851.22,debit,MERCHANT106@ybl,5522,1,synthetic_spin
+syn_0155,IN,INR,en,Canara,UPI,CANARA BANK: A/c **5659 debited Rs 1868.59 on 03-Apr-26 UPI to MERCHANT107@ybl Ref 300000107,1868.59,debit,MERCHANT107@ybl,5659,1,synthetic_spin
+syn_0156,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **5796 debited Rs 1885.96 on 03-Apr-26 UPI to MERCHANT108@ybl Ref 300000108,1885.96,debit,MERCHANT108@ybl,5796,1,synthetic_spin
+syn_0157,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **5933 debited Rs 1903.33 on 03-Apr-26 UPI to MERCHANT109@ybl Ref 300000109,1903.33,debit,MERCHANT109@ybl,5933,1,synthetic_spin
+syn_0158,IN,INR,en,Axis,UPI_P2M,INR 1920.70 debited / A/c no. XX6070 / UPI/P2M/900000110/TESTMERCHANT110 / Not you? SMS BLOCKUPI / Axis Bank,1920.7,debit,TESTMERCHANT110,6070,1,synthetic_spin
+syn_0159,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.1938.07 debited from A/c **6207 to SHOP111 on 01-Apr-26,1938.07,debit,SHOP111,6207,1,synthetic_spin
+syn_0160,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX6344 debited for INR 1955.44 on 02-Apr-26 Info: CAFE112 Ref 200112,1955.44,debit,CAFE112,6344,1,synthetic_spin
+syn_0161,IN,INR,en,SBI,UPI,Dear UPI user A/C X6481 debited by 1972.81 on date 02Apr26 trf to Mr TESTPAYEE113 Refno 600000113 SBI,1972.81,debit,TESTPAYEE113,6481,1,synthetic_spin
+syn_0162,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX6618 debited for INR 1990.18 on 02-Apr-26 Info: CAFE114 Ref 200114,1990.18,debit,CAFE114,6618,1,synthetic_spin
+syn_0163,IN,INR,en,PNB,UPI,PNB: A/c **6755 debited Rs 2007.55 on 03-Apr-26 UPI to MERCHANT115@ybl Ref 300000115,2007.55,debit,MERCHANT115@ybl,6755,1,synthetic_spin
+syn_0164,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **6892 debited Rs 2024.92 on 03-Apr-26 UPI to MERCHANT116@ybl Ref 300000116,2024.92,debit,MERCHANT116@ybl,6892,1,synthetic_spin
+syn_0165,IN,INR,en,Canara,UPI,CANARA BANK: A/c **7029 debited Rs 2042.29 on 03-Apr-26 UPI to MERCHANT117@ybl Ref 300000117,2042.29,debit,MERCHANT117@ybl,7029,1,synthetic_spin
+syn_0166,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **7166 debited Rs 2059.66 on 03-Apr-26 UPI to MERCHANT118@ybl Ref 300000118,2059.66,debit,MERCHANT118@ybl,7166,1,synthetic_spin
+syn_0167,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **7303 debited Rs 2077.03 on 03-Apr-26 UPI to MERCHANT119@ybl Ref 300000119,2077.03,debit,MERCHANT119@ybl,7303,1,synthetic_spin
+syn_0168,IN,INR,en,Axis,UPI_P2M,INR 2094.40 debited / A/c no. XX7440 / UPI/P2M/900000120/TESTMERCHANT120 / Not you? SMS BLOCKUPI / Axis Bank,2094.4,debit,TESTMERCHANT120,7440,1,synthetic_spin
+syn_0169,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.2111.77 debited from A/c **7577 to SHOP121 on 01-Apr-26,2111.77,debit,SHOP121,7577,1,synthetic_spin
+syn_0170,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX7714 debited for INR 2129.14 on 02-Apr-26 Info: CAFE122 Ref 200122,2129.14,debit,CAFE122,7714,1,synthetic_spin
+syn_0171,IN,INR,en,SBI,UPI,Dear UPI user A/C X7851 debited by 2146.51 on date 12Apr26 trf to Mr TESTPAYEE123 Refno 600000123 SBI,2146.51,debit,TESTPAYEE123,7851,1,synthetic_spin
+syn_0172,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX7988 debited for INR 2163.88 on 02-Apr-26 Info: CAFE124 Ref 200124,2163.88,debit,CAFE124,7988,1,synthetic_spin
+syn_0173,IN,INR,en,PNB,UPI,PNB: A/c **8125 debited Rs 2181.25 on 03-Apr-26 UPI to MERCHANT125@ybl Ref 300000125,2181.25,debit,MERCHANT125@ybl,8125,1,synthetic_spin
+syn_0174,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **8262 debited Rs 2198.62 on 03-Apr-26 UPI to MERCHANT126@ybl Ref 300000126,2198.62,debit,MERCHANT126@ybl,8262,1,synthetic_spin
+syn_0175,IN,INR,en,Canara,UPI,CANARA BANK: A/c **8399 debited Rs 2215.99 on 03-Apr-26 UPI to MERCHANT127@ybl Ref 300000127,2215.99,debit,MERCHANT127@ybl,8399,1,synthetic_spin
+syn_0176,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **8536 debited Rs 2233.36 on 03-Apr-26 UPI to MERCHANT128@ybl Ref 300000128,2233.36,debit,MERCHANT128@ybl,8536,1,synthetic_spin
+syn_0177,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **8673 debited Rs 2250.73 on 03-Apr-26 UPI to MERCHANT129@ybl Ref 300000129,2250.73,debit,MERCHANT129@ybl,8673,1,synthetic_spin
+syn_0178,IN,INR,en,Axis,UPI_P2M,INR 2268.10 debited / A/c no. XX8810 / UPI/P2M/900000130/TESTMERCHANT130 / Not you? SMS BLOCKUPI / Axis Bank,2268.1,debit,TESTMERCHANT130,8810,1,synthetic_spin
+syn_0179,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.2285.47 debited from A/c **8947 to SHOP131 on 01-Apr-26,2285.47,debit,SHOP131,8947,1,synthetic_spin
+syn_0180,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX9084 debited for INR 2302.84 on 02-Apr-26 Info: CAFE132 Ref 200132,2302.84,debit,CAFE132,9084,1,synthetic_spin
+syn_0181,IN,INR,en,SBI,UPI,Dear UPI user A/C X9221 debited by 2320.21 on date 22Apr26 trf to Mr TESTPAYEE133 Refno 600000133 SBI,2320.21,debit,TESTPAYEE133,9221,1,synthetic_spin
+syn_0182,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX9358 debited for INR 2337.58 on 02-Apr-26 Info: CAFE134 Ref 200134,2337.58,debit,CAFE134,9358,1,synthetic_spin
+syn_0183,IN,INR,en,PNB,UPI,PNB: A/c **9495 debited Rs 2354.95 on 03-Apr-26 UPI to MERCHANT135@ybl Ref 300000135,2354.95,debit,MERCHANT135@ybl,9495,1,synthetic_spin
+syn_0184,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **9632 debited Rs 2372.32 on 03-Apr-26 UPI to MERCHANT136@ybl Ref 300000136,2372.32,debit,MERCHANT136@ybl,9632,1,synthetic_spin
+syn_0185,IN,INR,en,Canara,UPI,CANARA BANK: A/c **9769 debited Rs 2389.69 on 03-Apr-26 UPI to MERCHANT137@ybl Ref 300000137,2389.69,debit,MERCHANT137@ybl,9769,1,synthetic_spin
+syn_0186,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **9906 debited Rs 2407.06 on 03-Apr-26 UPI to MERCHANT138@ybl Ref 300000138,2407.06,debit,MERCHANT138@ybl,9906,1,synthetic_spin
+syn_0187,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **0043 debited Rs 2424.43 on 03-Apr-26 UPI to MERCHANT139@ybl Ref 300000139,2424.43,debit,MERCHANT139@ybl,0043,1,synthetic_spin
+syn_0188,IN,INR,en,Axis,UPI_P2M,INR 2441.80 debited / A/c no. XX0180 / UPI/P2M/900000140/TESTMERCHANT140 / Not you? SMS BLOCKUPI / Axis Bank,2441.8,debit,TESTMERCHANT140,0180,1,synthetic_spin
+syn_0189,IN,INR,en,HDFC,UPI,HDFC Bank: Rs.2459.17 debited from A/c **0317 to SHOP141 on 01-Apr-26,2459.17,debit,SHOP141,0317,1,synthetic_spin
+syn_0190,IN,INR,en,ICICI,UPI,ICICI Bank: Acct XX0454 debited for INR 2476.54 on 02-Apr-26 Info: CAFE142 Ref 200142,2476.54,debit,CAFE142,0454,1,synthetic_spin
+syn_0191,IN,INR,en,SBI,UPI,Dear UPI user A/C X0591 debited by 2493.91 on date 04Apr26 trf to Mr TESTPAYEE143 Refno 600000143 SBI,2493.91,debit,TESTPAYEE143,0591,1,synthetic_spin
+syn_0192,IN,INR,en,Kotak,UPI,Kotak Bank: Acct XX0728 debited for INR 2511.28 on 02-Apr-26 Info: CAFE144 Ref 200144,2511.28,debit,CAFE144,0728,1,synthetic_spin
+syn_0193,IN,INR,en,PNB,UPI,PNB: A/c **0865 debited Rs 2528.65 on 03-Apr-26 UPI to MERCHANT145@ybl Ref 300000145,2528.65,debit,MERCHANT145@ybl,0865,1,synthetic_spin
+syn_0194,IN,INR,en,BOB,UPI,Bank of Baroda: A/c **1002 debited Rs 2546.02 on 03-Apr-26 UPI to MERCHANT146@ybl Ref 300000146,2546.02,debit,MERCHANT146@ybl,1002,1,synthetic_spin
+syn_0195,IN,INR,en,Canara,UPI,CANARA BANK: A/c **1139 debited Rs 2563.39 on 03-Apr-26 UPI to MERCHANT147@ybl Ref 300000147,2563.39,debit,MERCHANT147@ybl,1139,1,synthetic_spin
+syn_0196,IN,INR,en,Union Bank,UPI,Union Bank of India: A/c **1276 debited Rs 2580.76 on 03-Apr-26 UPI to MERCHANT148@ybl Ref 300000148,2580.76,debit,MERCHANT148@ybl,1276,1,synthetic_spin
+syn_0197,IN,INR,en,Yes Bank,UPI,YES BANK: A/c **1413 debited Rs 2598.13 on 03-Apr-26 UPI to MERCHANT149@ybl Ref 300000149,2598.13,debit,MERCHANT149@ybl,1413,1,synthetic_spin
+syn_0198,IN,INR,en,Axis,UPI_P2M,INR 2615.50 debited / A/c no. XX1550 / UPI/P2M/900000150/TESTMERCHANT150 / Not you? SMS BLOCKUPI / Axis Bank,2615.5,debit,TESTMERCHANT150,1550,1,synthetic_spin

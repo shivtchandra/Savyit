@@ -1,0 +1,32 @@
+Indian bank SMS dataset (synthetic + template-based) for Kaggle
+================================================================
+
+Files to upload as a Kaggle Dataset:
+  - kaggle_indian_bank_sms_dataset.jsonl   (one JSON object per line; preserves newlines in raw_sms)
+  - kaggle_indian_bank_sms_dataset.csv     (same rows; raw_sms newlines replaced with " / ")
+
+Columns (both formats):
+  id                         Unique row id (syn_0001, ...)
+  country                    IN
+  currency                   INR
+  language                   en
+  bank                       Issuing bank short name (may be empty for non-bank rows)
+  channel                    UPI_P2M, UPI, CARD, NEFT, ATM, OTP, PROMO, BALANCE, ALERT, ...
+  raw_sms                    Full SMS body (synthetic; not from real customers)
+  amount                     Numeric amount when applicable; 0 for alerts/promos
+  txn_type                   debit | credit | unknown
+  merchant                   Payee / narration label (synthetic)
+  account_last4              Masked last 4 digits when present
+  is_financial_transaction   1 = spend/income-like SMS, 0 = OTP, promo, balance-only, service alert
+  label_category             Fine-grained tag: upi_debit, card_debit, otp, promotional, etc.
+
+Regenerate or extend:
+  python3 scripts/generate_kaggle_indian_bank_sms.py
+
+App integration (MoneyLens):
+  The app uses rule-based parsing, not the sklearn joblib file. After changing
+  data/kaggle_indian_bank_sms_dataset.jsonl, regenerate and run:
+    flutter test test/kaggle_dataset_conformance_test.dart
+
+License: recommend CC0 or "Other" with note "Synthetic data for research; no real PII."
+Before publishing real SMS: strip phone numbers, full account numbers, and UPI refs.

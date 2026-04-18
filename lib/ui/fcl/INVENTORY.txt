@@ -1,0 +1,24 @@
+MoneyLens × Flutter Component Library (FCL) — Phase 0 shortlist
+Source: https://fluttercomponentlibrary.com/ (copy-in workflow; no single pub package)
+
+NAVIGATION
+- FCL: Secondary Tabbar — https://fluttercomponentlibrary.com/pages/components/secondary-tabbar.html
+- MoneyLens: HomeScreen bottom dock (4 tabs + center FAB notch)
+- Approach: SleekDockedBottomNav — FCL-style sliding pill + rounded dock; tokens only (no new pub deps)
+
+HERO / SUMMARY CARDS
+- FCL: Plan Card — https://fluttercomponentlibrary.com/pages/components/plan-card.html
+- MoneyLens: overview _BalanceHeroCard
+- Approach: SleekPlanHeroFrame — gradient rim + entrance scale; inner content unchanged; AppColors/AppRadius/AppShadows
+
+LISTS / ACTIVITY
+- FCL: list row / chip patterns (catalog “list” / motion pages as reference)
+- MoneyLens: TransactionsScreen _TransactionTile
+- Approach: SleekTransactionTile — subtle gradient ring on category avatar + tokenized card shell; no per-row heavy animation
+
+FORMS / SHEETS (deferred)
+- FCL segmented / inputs where they map to manual_transaction_sheet, category_review_sheet, onboarding
+- Status: not in pilot; re-use same lib/ui/fcl/ + FclTheme when needed
+
+EXTRA PUBSPEC DEPS
+- None added for this pilot (Material 3 + existing hugeicons / google_fonts only)

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1025453755918",
+    "project_id": "savyit-283c5",
+    "storage_bucket": "savyit-283c5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025453755918:android:16a594e3fe91e0b59f765f",
+        "android_client_info": {
+          "package_name": "com.moneylens.money_lens"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAx0u685dFw0oDPFcESOpGJMhIJzv5gjb0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

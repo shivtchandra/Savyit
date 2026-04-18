@@ -1,0 +1,68 @@
+name: money_lens
+description: "MoneyLens — Auto-parse bank & UPI SMS into a beautiful expense dashboard."
+publish_to: 'none'
+
+version: 1.0.0+3
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # SMS inbox reading
+  flutter_sms_inbox: ^1.0.3
+
+  # Runtime permission handling
+  permission_handler: ^11.3.1
+
+  # Charts
+  fl_chart: ^0.69.0
+
+  # State management
+  provider: ^6.1.2
+
+  # Fonts & formatting
+  google_fonts: ^8.0.2
+  intl: ^0.20.2
+
+  # HTTP for OpenAI API
+  http: ^1.2.0
+
+  # Local key-value storage
+  shared_preferences: ^2.3.0
+
+  # File picking & PDF parsing
+  file_picker: ^8.1.0
+  syncfusion_flutter_pdf: ^28.1.33
+
+  cupertino_icons: ^1.0.8
+  hugeicons: ^1.1.5
+  path_provider: ^2.1.3
+  share_plus: ^12.0.1
+
+  # Firebase
+  firebase_core: ^3.13.0
+  firebase_auth: ^5.5.0
+  google_sign_in: ^6.2.2
+  pdf: ^3.11.3
+  printing: ^5.14.2
+  shadcn_ui: ^0.53.5
+
+  # In-house local reminders (evening nudge when today has no txns)
+  flutter_local_notifications: ^18.0.1
+  timezone: ^0.10.0
+  flutter_timezone: ^3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - app_assets/
