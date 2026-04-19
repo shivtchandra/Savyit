@@ -14,7 +14,7 @@ class OpenAIService {
   static const _prefsKey = 'openai_api_key';
 
   /// Chat model (must be allowed on your OpenAI account; passed to the proxy).
-  static const String chatModel = 'gpt-5.2-mini';
+  static const String chatModel = 'gpt-4o-mini';
 
   /// Production OpenAI proxy (Vercel). Uses Firebase ID token — no app-bundled API key.
   static const String cloudProxyBaseUrl = 'https://savyit-2ntk.vercel.app';

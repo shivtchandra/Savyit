@@ -68,7 +68,6 @@ export async function POST(req: NextRequest) {
 
   const openai = new OpenAI({ apiKey });
   const model =
-    body.model?.trim() ||
     process.env.OPENAI_MODEL ||
     "gpt-4o-mini";
 
