@@ -15,6 +15,7 @@ import '../widgets/blob_mascot.dart';
 import '../models/mascot_dna.dart';
 import '../ui/savyit/index.dart';
 import 'financial_plan_screen.dart';
+import 'home_screen.dart';
 
 /// Onboarding accents — same neo palette as the rest of the app.
 abstract final class _OnboardingJoy {
@@ -34,7 +35,10 @@ abstract final class _OnboardingJoy {
 }
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  /// After logout: land on sign-in only, then return to [HomeScreen] (no full onboarding replay).
+  final bool reauthAfterLogout;
+
+  const OnboardingScreen({super.key, this.reauthAfterLogout = false});
 
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
@@ -52,12 +56,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   static const _totalSteps = 12; // +1 for buddy picker step
   MascotDna _draftDna = MascotDna.defaults();
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.reauthAfterLogout) {
+      _step = 11;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        final n = await StorageService.getUserName();
+        if (!mounted) return;
+        if (n != null && n.isNotEmpty) _nameController.text = n;
+      });
+    }
+  }
+
   void _next() => setState(() => _step++);
   void _back() {
+    if (widget.reauthAfterLogout && _step >= 11) return;
     if (_step > 0) setState(() => _step--);
   }
 
-  void _finish({bool skippedAuth = false}) async {
+  void _finish() async {
     final name = _nameController.text.trim();
     if (name.isEmpty) return;
 
@@ -77,7 +95,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
     await StorageService.saveThemeMode(_selectedTheme);
     await StorageService.saveMascotDna(_draftDna);
-    if (skippedAuth) await StorageService.setAuthSkipped(true);
     await StorageService.setProfileComplete(true);
     await StorageService.setOnboardingDone(true);
 
@@ -92,7 +109,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: !(widget.reauthAfterLogout && _step >= 11),
+      child: Scaffold(
       backgroundColor: AppColors.bg,
       body: GridBackground(
         patternColor: AppColors.isMonochrome
@@ -107,7 +126,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   padding: const EdgeInsets.fromLTRB(24, 14, 24, 0),
                   child: Row(
                     children: [
-                      if (_step > 0)
+                      if (_step > 0 &&
+                          !(widget.reauthAfterLogout && _step >= 11))
                         Material(
                           color: Colors.transparent,
                           child: InkWell(
@@ -123,6 +143,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ),
                           ),
                         ),
+                      if (widget.reauthAfterLogout && _step >= 11)
+                        const SizedBox(width: 40),
                       const SizedBox(width: 8),
                       Expanded(
                         child: ClipRRect(
@@ -184,6 +206,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 
@@ -309,8 +332,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       case 11:
         return _AuthStep(
           key: const ValueKey(11),
-          onAuthenticated: () => _finish(),
-          onSkip: () => _finish(skippedAuth: true),
+          onAuthenticated: () async {
+            if (widget.reauthAfterLogout) {
+              if (!mounted) return;
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const HomeScreen()),
+                (route) => false,
+              );
+            } else {
+              _finish();
+            }
+          },
         );
       default:
         return const SizedBox();
@@ -1810,12 +1842,10 @@ class _SmsPermissionStepState extends State<_SmsPermissionStep> {
   }
 }
 
-// ── Step 9: Auth (Register / Login / Skip) ───────────────────────
+// ── Step 11: Auth (Register / Login) ────────────────────────────
 class _AuthStep extends StatefulWidget {
   final VoidCallback onAuthenticated;
-  final VoidCallback onSkip;
-  const _AuthStep(
-      {super.key, required this.onAuthenticated, required this.onSkip});
+  const _AuthStep({super.key, required this.onAuthenticated});
   @override
   State<_AuthStep> createState() => _AuthStepState();
 }
@@ -1948,7 +1978,8 @@ class _AuthStepState extends State<_AuthStep>
             const SizedBox(height: 6),
             _EntranceAnimation(
                 delayIndex: 1,
-                child: Text('Create an account to sync and back up your data.',
+                child: Text(
+                    'Sign in is required for cloud AI SMS parsing. Your account also syncs and backs up your data.',
                     style: GoogleFonts.inter(
                         color: AppColors.textMuted,
                         fontSize: 14,
@@ -2074,19 +2105,6 @@ class _AuthStepState extends State<_AuthStep>
                           borderRadius: BorderRadius.circular(14))),
                 ),
               ),
-            ),
-            const SizedBox(height: 12),
-            _EntranceAnimation(
-              delayIndex: 7,
-              child: Center(
-                  child: TextButton(
-                onPressed: _loading ? null : widget.onSkip,
-                child: Text('Skip for now',
-                    style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textMuted)),
-              )),
             ),
             const SizedBox(height: 32),
           ],

@@ -1,6 +1,6 @@
 // lib/services/sms_service.dart
 // Phase 1: read SMS + pre-filter for financial candidates
-// Phase 2: classification is done locally (LocalParserService in transaction_provider)
+// Phase 2: classification is OpenAI-only (see TransactionProvider.load + OpenAIService).
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';

@@ -2,7 +2,7 @@ name: money_lens
 description: "MoneyLens — Auto-parse bank & UPI SMS into a beautiful expense dashboard."
 publish_to: 'none'
 
-version: 1.0.0+3
+version: 1.0.1+5
 
 environment:
   sdk: ^3.0.0
@@ -34,6 +34,9 @@ dependencies:
 
   # Local key-value storage
   shared_preferences: ^2.3.0
+
+  # Build/version label (matches pubspec in release APK/AAB)
+  package_info_plus: ^8.0.0
 
   # File picking & PDF parsing
   file_picker: ^8.1.0

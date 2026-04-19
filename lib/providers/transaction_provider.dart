@@ -12,7 +12,6 @@ import '../models/split_settlement.dart';
 
 import '../services/sms_service.dart';
 import '../services/openai_service.dart';
-import '../services/local_parser_service.dart';
 import '../services/stats_service.dart';
 import '../services/pdf_service.dart';
 import '../services/storage_service.dart';
@@ -1262,8 +1261,45 @@ class TransactionProvider extends ChangeNotifier {
     // Users can explicitly trigger a fresh SMS scan via the "Scan SMS" button.
   }
 
+  Future<void> _persistSmsScanCursorFromRange(List<DateTime> range) async {
+    await StorageService.setSmsScanCursorEndInclusive(range[1]);
+  }
+
+  /// Effective `[from, to]` for [SmsService.readCandidates], or null when
+  /// incremental mode has no new calendar days left (within the UI date range).
+  Future<List<DateTime>?> _resolveEffectiveSmsScanRange({
+    required bool forceFullSmsWindow,
+  }) async {
+    final ui =
+        _rangeOption.resolve(customFrom: _customFrom, customTo: _customTo);
+    final incrementalOn = !forceFullSmsWindow &&
+        await StorageService.getIncrementalSmsScanEnabled();
+    if (!incrementalOn) return ui;
+
+    final cursor = await StorageService.getSmsScanCursorEndInclusive();
+    if (cursor == null) return ui;
+
+    final cursorDay = _dateOnly(cursor);
+    final dayAfterCursor = cursorDay.add(const Duration(days: 1));
+    final todayStart = _dateOnly(DateTime.now());
+    if (dayAfterCursor.isAfter(todayStart)) return null;
+
+    final uiFromDay = _dateOnly(ui[0]);
+    final uiEndDay = _dateOnly(ui[1]);
+    var fromDay = dayAfterCursor.isAfter(uiFromDay) ? dayAfterCursor : uiFromDay;
+    fromDay = _dateOnly(fromDay);
+    if (fromDay.isAfter(uiEndDay)) return null;
+
+    final from = DateTime(fromDay.year, fromDay.month, fromDay.day);
+    return [from, ui[1]];
+  }
+
+  /// Re-read bank SMS across the full date range (ignores incremental cursor).
+  Future<void> loadFullSmsWindowRescan() =>
+      load(forceFullSmsWindow: true);
+
   // ── Load ─────────────────────────────────────────────────────
-  Future<void> load() async {
+  Future<void> load({bool forceFullSmsWindow = false}) async {
     _state = LoadState.loading;
     _progressLabel = 'Requesting SMS permission…';
     _progressCurrent = 0;
@@ -1288,10 +1324,30 @@ class TransactionProvider extends ChangeNotifier {
       _progressLabel = 'Reading SMS inbox…';
       notifyListeners();
 
-      final range =
+      final rangeMaybe = await _resolveEffectiveSmsScanRange(
+        forceFullSmsWindow: forceFullSmsWindow,
+      );
+      if (rangeMaybe == null) {
+        _state = LoadState.loaded;
+        _progressLabel = '';
+        _debugInfo +=
+            '[SMS] Incremental: no new calendar days to scan (within your date range).\n';
+        notifyListeners();
+        await EngagementNotificationsService.syncFromTransactions(_transactions);
+        return;
+      }
+      final range = rangeMaybe;
+      final uiRange =
           _rangeOption.resolve(customFrom: _customFrom, customTo: _customTo);
+      if (_dateOnly(range[0]) != _dateOnly(uiRange[0])) {
+        _debugInfo +=
+            '[RANGE] Incremental: SMS from first missed day (saved scan cursor).\n';
+      }
       _debugInfo +=
           '[RANGE] Range: ${range[0].toString().substring(0, 10)} → ${range[1].toString().substring(0, 10)}\n';
+      if (forceFullSmsWindow) {
+        _debugInfo += '[RANGE] Full-window rescan (cursor will advance).\n';
+      }
       notifyListeners();
 
       final candidates =
@@ -1299,6 +1355,7 @@ class TransactionProvider extends ChangeNotifier {
       _debugInfo += '[SMS] SMS candidates found: ${candidates.length}\n';
 
       if (candidates.isEmpty) {
+        await _persistSmsScanCursorFromRange(range);
         _state = LoadState.loaded;
         _progressLabel = '';
         _debugInfo += '[WARN] No financial SMS found in this period';
@@ -1314,62 +1371,58 @@ class TransactionProvider extends ChangeNotifier {
             '[PREV] First SMS: ${first.substring(0, first.length > 80 ? 80 : first.length)}…\n';
       }
 
-      // Step 3: Cloud AI when signed in (Vercel proxy + Firebase); otherwise local-only.
+      // Step 3: SMS parsing uses OpenAI only (no local rule fallback).
       final useCloudAi = OpenAIService.canUseCloudAi;
-      List<Transaction> parsedTxns = [];
-      LocalParseResult? parseResult;
-      _lastScanUsedOpenAi = false;
+      if (!useCloudAi) {
+        _state = LoadState.loaded;
+        _progressLabel = '';
+        _debugInfo +=
+            '[ROUTE] SMS import uses OpenAI only. Sign in with Firebase (Profile), then scan again.\n';
+        notifyListeners();
+        await EngagementNotificationsService.syncFromTransactions(_transactions);
+        return;
+      }
 
-      if (useCloudAi) {
-        _progressLabel =
-            'Parsing SMS with OpenAI (${OpenAIService.chatModel})…';
+      _debugInfo +=
+          '[ROUTE] Cloud AI ON (Firebase signed in → ${OpenAIService.cloudProxyBaseUrl})\n';
+      notifyListeners();
+
+      _progressLabel =
+          'Parsing SMS with OpenAI (${OpenAIService.chatModel})…';
+      notifyListeners();
+
+      List<Transaction> parsedTxns = [];
+      _lastScanUsedOpenAi = false;
+      try {
+        parsedTxns = await OpenAIService.classify(
+          candidates: candidates,
+          onProgress: (done, total) {
+            _progressLabel = 'OpenAI SMS… $done / $total';
+            notifyListeners();
+          },
+          onLog: (line) {
+            _debugInfo += line;
+            notifyListeners();
+          },
+        );
+        _lastScanUsedOpenAi = true;
+        _lastScanChecked = candidates.length;
+        _lastScanRegex = 0;
+        _lastScanModel = parsedTxns.length;
+        _lastScanSkipped = 0;
+        _debugInfo +=
+            '[AI] ${OpenAIService.chatModel}: ${parsedTxns.length} transactions from ${candidates.length} SMS.\n';
+      } catch (e) {
+        _debugInfo += '[AI] OpenAI failed: $e\n';
+        _error = 'OpenAI SMS parsing failed. Check connection and try again.';
+        _state = LoadState.error;
+        _progressLabel = '';
         notifyListeners();
-        try {
-          parsedTxns = await OpenAIService.classify(
-            candidates: candidates,
-            onProgress: (done, total) {
-              _progressLabel = 'OpenAI SMS… $done / $total';
-              notifyListeners();
-            },
-          );
-          _lastScanUsedOpenAi = true;
-          _lastScanChecked = candidates.length;
-          _lastScanRegex = 0;
-          _lastScanModel = parsedTxns.length;
-          _lastScanSkipped = 0;
-          _debugInfo +=
-              '[AI] ${OpenAIService.chatModel}: ${parsedTxns.length} transactions from ${candidates.length} SMS.\n';
-        } catch (e) {
-          _debugInfo += '[AI] OpenAI failed: $e\n[FALLBACK] Local parser…\n';
-          _progressLabel = 'OpenAI failed — parsing locally…';
-          notifyListeners();
-          final local =
-              await compute(LocalParserService.parseCandidates, candidates);
-          parseResult = local;
-          parsedTxns = local.transactions;
-          _lastScanUsedOpenAi = false;
-          _lastScanChecked = local.checked;
-          _lastScanRegex = local.regexMatched;
-          _lastScanModel = local.modelFlagged;
-          _lastScanSkipped = local.skipped;
-          _debugInfo +=
-              '[LOCAL] Fallback found ${parsedTxns.length} transactions.\n';
+        if (kDebugMode) {
+          debugPrint('──────── Savyit SMS scan (OpenAI error) ────────\n$_debugInfo');
         }
-      } else {
-        _debugInfo +=
-            '[KEY] Not signed in — cloud AI unavailable; local parser only.\n';
-        _progressLabel = 'Parsing transactions locally…';
-        notifyListeners();
-        final local =
-            await compute(LocalParserService.parseCandidates, candidates);
-        parseResult = local;
-        parsedTxns = local.transactions;
-        _lastScanChecked = local.checked;
-        _lastScanRegex = local.regexMatched;
-        _lastScanModel = local.modelFlagged;
-        _lastScanSkipped = local.skipped;
-        _debugInfo +=
-            '[LOCAL] Local parser found ${parsedTxns.length}.\n';
+        await EngagementNotificationsService.syncFromTransactions(_transactions);
+        return;
       }
 
       final addedCount = _mergeTransactions(parsedTxns);
@@ -1381,26 +1434,25 @@ class TransactionProvider extends ChangeNotifier {
       }
 
       final skipped = candidates.length - parsedTxns.length;
-      if (!_lastScanUsedOpenAi && skipped > 0) {
+      if (skipped > 0) {
         _debugInfo +=
-            '[LOCAL] $skipped SMS did not yield a transaction from rules.\n';
+            '[AI] $skipped SMS did not yield a transaction from the model.\n';
       }
 
       _progressLabel = parsedTxns.isEmpty
           ? 'No transactions parsed (${candidates.length} bank-like SMS in range). Try manual add or adjust range.'
           : 'Imported ${parsedTxns.length} from ${candidates.length} bank-like SMS${skipped > 0 ? ' ($skipped not classified)' : ''}.';
       notifyListeners();
-      await Future<void>.delayed(const Duration(milliseconds: 900));
+      await Future<void>.delayed(const Duration(milliseconds: 350));
 
       _state = LoadState.loaded;
       _progressLabel = '';
       _debugInfo += '[OK] Done! ${parsedTxns.length} transactions this scan.';
+      await _persistSmsScanCursorFromRange(range);
       if (kDebugMode) {
-        final rs = parseResult;
         debugPrint(
           '──────── Savyit SMS scan (debug) ────────\n'
           '$_debugInfo\n'
-          '${rs != null ? '[STATS] regex=${rs.regexMatched} fallback=${rs.modelFlagged} promoSkipped=${rs.skipped} checked=${rs.checked}' : '[STATS] OpenAI path'}\n'
           '────────────────────────────────────────',
         );
       }

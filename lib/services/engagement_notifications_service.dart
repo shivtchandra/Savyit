@@ -75,12 +75,24 @@ class EngagementNotificationsService {
     }
   }
 
+  static Future<void> _safeCancelEvening() async {
+    try {
+      await _plugin.cancel(_eveningId);
+    } on PlatformException catch (e, st) {
+      if (kDebugMode) {
+        debugPrint(
+          'EngagementNotificationsService: cancel failed (ignored): $e\n$st',
+        );
+      }
+    }
+  }
+
   /// Call after any change to persisted transactions (or after SMS scan).
   static Future<void> syncFromTransactions(List<Transaction> txns) async {
     if (kIsWeb || !_initialized) return;
 
     if (!await StorageService.getEngagementNotificationsEnabled()) {
-      await _plugin.cancel(_eveningId);
+      await _safeCancelEvening();
       return;
     }
 
@@ -95,7 +107,7 @@ class EngagementNotificationsService {
     }
 
     if (_countToday(txns) > 0) {
-      await _plugin.cancel(_eveningId);
+      await _safeCancelEvening();
       return;
     }
 

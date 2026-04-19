@@ -24,6 +24,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        // Required by flutter_local_notifications (java.time APIs on older Android).
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -31,11 +33,19 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String?
-            keyPassword = keystoreProperties["keyPassword"] as String?
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String?
+        // Only register release signing when key.properties + keystore exist, or Gradle
+        // validates a broken release config and `assembleRelease` fails.
+        if (keystorePropertiesFile.exists()) {
+            val storePath = keystoreProperties["storeFile"] as String?
+            val storeOk = storePath != null && rootProject.file(storePath).exists()
+            if (storeOk) {
+                create("release") {
+                    keyAlias = keystoreProperties["keyAlias"] as String
+                    keyPassword = keystoreProperties["keyPassword"] as String
+                    storeFile = rootProject.file(storePath!!)
+                    storePassword = keystoreProperties["storePassword"] as String
+                }
+            }
         }
     }
 
@@ -52,8 +62,21 @@ android {
 
     buildTypes {
         release {
-            // Signing with the created release keys, so app data won't wipe on update.
-            signingConfig = signingConfigs.getByName("release")
+            // Use upload keystore when key.properties exists; otherwise debug signing
+            // so `flutter build apk --release` always produces an installable artifact.
+            signingConfig = if (keystorePropertiesFile.exists() &&
+                signingConfigs.findByName("release") != null
+            ) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
+            // R8 + Gson: flutter_local_notifications needs these or cancel/schedule crashes
+            // ("Missing type parameter" in loadScheduledNotifications).
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }
@@ -63,6 +86,7 @@ flutter {
 }
 
 dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     // Firebase BoM — ensures all Firebase library versions are compatible
     implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
     implementation("com.google.firebase:firebase-analytics")

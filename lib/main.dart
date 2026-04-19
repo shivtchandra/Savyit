@@ -35,14 +35,13 @@ void main() async {
   }
 
   final isDone = await StorageService.isOnboardingDone();
-  final authSkipped = await StorageService.isAuthSkipped();
   final isLoggedIn =
       kIsWeb ? false : FirebaseAuth.instance.currentUser != null;
 
   final provider = TransactionProvider();
 
-  // Go to HomeScreen if onboarding is done AND (user is logged in OR skipped auth)
-  final goHome = isDone && (isLoggedIn || authSkipped);
+  // Home only after onboarding and a Firebase session (required for cloud SMS parsing).
+  final goHome = isDone && isLoggedIn;
 
   if (goHome) {
     await provider.init();

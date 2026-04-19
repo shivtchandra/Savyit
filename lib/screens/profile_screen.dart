@@ -1,5 +1,6 @@
 // lib/screens/profile_screen.dart
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -8,7 +9,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../providers/transaction_provider.dart';
+import '../services/auth_service.dart';
 import '../services/share_service.dart';
 import '../services/storage_service.dart';
 import '../theme/app_theme.dart';
@@ -17,6 +20,7 @@ import '../widgets/blob_mascot.dart';
 import '../models/mascot_dna.dart';
 import '../ui/savyit/index.dart';
 import 'financial_plan_screen.dart';
+import 'onboarding_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -165,6 +169,14 @@ class ProfileScreen extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (_) => const FinancialPlanScreen())),
                   ),
+                  if (!kIsWeb && AuthService.isLoggedIn)
+                    _SettingsTile(
+                      icon: HugeIcons.strokeRoundedLogout01,
+                      title: 'Log out',
+                      subtitle: 'Sign out of your account',
+                      iconColor: AppColors.textSecondary,
+                      onTap: () => _showLogoutDialog(context),
+                    ),
                 ],
               ),
 
@@ -174,6 +186,7 @@ class ProfileScreen extends StatelessWidget {
               _SettingsSection(
                 title: 'Data',
                 children: [
+                  const _SmsScanSettingsBlock(),
                   _SettingsTile(
                     icon: HugeIcons.strokeRoundedFileExport,
                     title: 'Export Data',
@@ -202,16 +215,66 @@ class ProfileScreen extends StatelessWidget {
 
               SizedBox(height: AppSpacing.xxxl),
 
-              // App Info
-              Text(
-                'Savyit v1.0.0',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
+              // App Info — versionName + versionCode from pubspec / Gradle (verify release installs).
+              const _AppVersionFooter(),
 
               SizedBox(height: AppSpacing.huge),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.xl),
+        ),
+        title: Text(
+          'Log out?',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        content: Text(
+          'You will need to sign in again to use cloud AI for SMS. Your saved transactions stay on this device.',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              await AuthService.signOut();
+              await StorageService.setAuthSkipped(false);
+              if (!context.mounted) return;
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const OnboardingScreen(reauthAfterLogout: true),
+                ),
+                (route) => false,
+              );
+            },
+            child: Text(
+              'Log out',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w600,
+                color: AppColors.red,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1220,6 +1283,200 @@ class _BuddySectionCardState extends State<_BuddySectionCard> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _AppVersionFooter extends StatelessWidget {
+  const _AppVersionFooter();
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme.bodySmall;
+    return FutureBuilder<PackageInfo>(
+      future: PackageInfo.fromPlatform(),
+      builder: (context, snap) {
+        if (snap.hasError || !snap.hasData) {
+          return Text('Savyit', style: textStyle);
+        }
+        final p = snap.data!;
+        return Text(
+          'Savyit v${p.version} (${p.buildNumber})',
+          style: textStyle,
+        );
+      },
+    );
+  }
+}
+
+class _SmsScanSettingsBlock extends StatefulWidget {
+  const _SmsScanSettingsBlock();
+
+  @override
+  State<_SmsScanSettingsBlock> createState() => _SmsScanSettingsBlockState();
+}
+
+class _SmsScanSettingsBlockState extends State<_SmsScanSettingsBlock> {
+  bool _incremental = true;
+  String? _cursorYmd;
+
+  @override
+  void initState() {
+    super.initState();
+    _reloadPrefs();
+  }
+
+  Future<void> _reloadPrefs() async {
+    final inc = await StorageService.getIncrementalSmsScanEnabled();
+    final c = await StorageService.getSmsScanCursorEndInclusive();
+    if (!mounted) return;
+    setState(() {
+      _incremental = inc;
+      if (c == null) {
+        _cursorYmd = null;
+      } else {
+        _cursorYmd =
+            '${c.year}-${c.month.toString().padLeft(2, '0')}-${c.day.toString().padLeft(2, '0')}';
+      }
+    });
+  }
+
+  Future<void> _confirmClearCursor(BuildContext context) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.xl),
+        ),
+        title: Text(
+          'Reset SMS scan position?',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        content: Text(
+          'The next SMS scan will read your full selected date range again, then resume incremental updates.',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(
+              'Reset',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w600,
+                color: AppColors.accentTextOnSurface,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !context.mounted) return;
+    await StorageService.clearSmsScanCursor();
+    await _reloadPrefs();
+  }
+
+  Future<void> _confirmFullRescan(BuildContext context) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.xl),
+        ),
+        title: Text(
+          'Rescan full date range?',
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+        content: Text(
+          'This one run re-reads all SMS in your current date-range setting, then updates the saved scan position.',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(
+              'Cancel',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w600,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(
+              'Rescan',
+              style: GoogleFonts.inter(
+                fontWeight: FontWeight.w600,
+                color: AppColors.accentTextOnSurface,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !context.mounted) return;
+    await context.read<TransactionProvider>().loadFullSmsWindowRescan();
+    if (context.mounted) await _reloadPrefs();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cursorSubtitle = _cursorYmd == null
+        ? 'No saved day yet — next scan uses your full date range'
+        : 'Last successful scan through $_cursorYmd (inclusive)';
+    Widget div() => Divider(
+          height: 1,
+          indent: AppSpacing.xl + 40,
+          endIndent: AppSpacing.lg,
+          color: AppColors.border,
+        );
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SettingsTile(
+          icon: HugeIcons.strokeRoundedMessage02,
+          title: 'Incremental SMS scan',
+          subtitle:
+              'Skip days already scanned; only read newer days (within your range).',
+          trailing: Switch.adaptive(
+            value: _incremental,
+            onChanged: (v) async {
+              await StorageService.setIncrementalSmsScanEnabled(v);
+              if (mounted) setState(() => _incremental = v);
+            },
+          ),
+          onTap: () async {
+            final v = !_incremental;
+            await StorageService.setIncrementalSmsScanEnabled(v);
+            if (mounted) setState(() => _incremental = v);
+          },
+        ),
+        div(),
+        _SettingsTile(
+          icon: HugeIcons.strokeRoundedCalendar03,
+          title: 'Reset SMS scan position',
+          subtitle: cursorSubtitle,
+          onTap: () => _confirmClearCursor(context),
+        ),
+        div(),
+        _SettingsTile(
+          icon: HugeIcons.strokeRoundedRefresh,
+          title: 'Rescan full date range',
+          subtitle: 'One full pass; ignores saved position',
+          onTap: () => _confirmFullRescan(context),
+        ),
+      ],
     );
   }
 }

@@ -1,8 +1,10 @@
 // lib/services/openai_service.dart
 // PDF / SMS classification via OpenAI Chat Completions (proxied through Vercel + Firebase).
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show debugPrint, kDebugMode;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/transaction.dart';
@@ -47,6 +49,34 @@ class OpenAIService {
     await prefs.remove(_prefsKey);
   }
 
+  /// Non-secret JWT payload fields (for 401 diagnosis in release UI / logs).
+  static String _idTokenClaimsSummary(String token) {
+    try {
+      final parts = token.split('.');
+      if (parts.length != 3) return 'malformed_jwt';
+      var payload = parts[1];
+      final pad = payload.length % 4;
+      if (pad > 0) payload += '=' * (4 - pad);
+      payload = payload.replaceAll('-', '+').replaceAll('_', '/');
+      final map = jsonDecode(utf8.decode(base64Decode(payload))) as Map;
+      final aud = map['aud'];
+      final audStr = aud is String
+          ? aud
+          : (aud is List && aud.isNotEmpty ? '${aud.first}' : '$aud');
+      final expected = FirebaseAuth.instance.app.options.projectId;
+      final match = audStr == expected;
+      return 'jwt_aud=$audStr app_projectId=$expected '
+          '${match ? 'match' : 'MISMATCH'} iss=${map['iss']}';
+    } catch (_) {
+      return 'jwt_decode_failed';
+    }
+  }
+
+  static void _debugLogIdTokenClaims(String token, {String? context}) {
+    if (!kDebugMode) return;
+    debugPrint('[Firebase ID token $context] ${_idTokenClaimsSummary(token)}');
+  }
+
   static void _ensureProxyOk(http.Response res) {
     if (res.statusCode == 200) return;
     final snippet = res.body.length > 400
@@ -56,6 +86,9 @@ class OpenAIService {
   }
 
   /// POST [messages] to Vercel proxy with Firebase ID token. Returns raw OpenAI-shaped JSON body.
+  ///
+  /// Uses a cached ID token first; on **401** from the proxy, forces
+  /// [User.getIdToken] with refresh and retries once (tokens expire ~1h).
   static Future<http.Response> _chatViaProxy({
     required List<Map<String, dynamic>> messages,
     double? temperature,
@@ -67,21 +100,64 @@ class OpenAIService {
         'Sign in to use AI. Cloud features need a Firebase account.',
       );
     }
-    final token = await user.getIdToken();
+
     final body = <String, dynamic>{
       'messages': messages,
       'model': chatModel,
       if (temperature != null) 'temperature': temperature,
       if (maxTokens != null) 'max_tokens': maxTokens,
     };
-    return http.post(
-      _proxyChatUri,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(body),
-    );
+    final encoded = jsonEncode(body);
+
+    Future<http.Response> post(String token) {
+      return http
+          .post(
+            _proxyChatUri,
+            headers: {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json',
+            },
+            body: encoded,
+          )
+          .timeout(
+            const Duration(seconds: 120),
+            onTimeout: () => throw TimeoutException(
+              'AI proxy timed out after 120s (${_proxyChatUri.host})',
+            ),
+          );
+    }
+
+    Future<String> freshToken({required bool forceRefresh}) async {
+      final t = await user.getIdToken(forceRefresh);
+      final trimmed = t?.trim();
+      if (trimmed == null || trimmed.isEmpty) {
+        throw Exception(
+          'Could not get Firebase ID token. Sign out and sign in again, '
+          'then retry.',
+        );
+      }
+      return trimmed;
+    }
+
+    var token = await freshToken(forceRefresh: false);
+    var res = await post(token);
+    if (res.statusCode == 401) {
+      _debugLogIdTokenClaims(token, context: 'after first 401');
+      await user.reload();
+      token = await freshToken(forceRefresh: true);
+      res = await post(token);
+    }
+    if (res.statusCode == 401) {
+      _debugLogIdTokenClaims(token, context: 'after refresh+retry');
+      final summary = _idTokenClaimsSummary(token);
+      throw Exception(
+        'AI proxy 401 after token refresh. $summary. '
+        'Fix Vercel: FIREBASE_SERVICE_ACCOUNT_JSON must be the service account for the '
+        'same Firebase project; private_key must use real newlines (replace \\\\n in env). '
+        'Example server: deployment/vercel_api_chat.mjs in repo.',
+      );
+    }
+    return res;
   }
 
   /// Best-effort connectivity check (signed-in users only).
@@ -287,6 +363,8 @@ Rules:
   static Future<List<Transaction>> classify({
     required List<SmsCandidate> candidates,
     void Function(int completed, int total)? onProgress,
+    /// Optional: e.g. append to SMS scan debug log (batch timings, proxy proof).
+    void Function(String line)? onLog,
   }) async {
     final results = <Transaction>[];
     const batchSize = 15;
@@ -300,9 +378,20 @@ Rules:
               : i + batchSize));
     }
 
+    onLog?.call(
+      '[AI] Vercel proxy: $cloudProxyBaseUrl · ${batches.length} batch(es) × up to $batchSize SMS\n',
+    );
+
     int completed = 0;
-    for (final batch in batches) {
+    for (var i = 0; i < batches.length; i++) {
+      final batch = batches[i];
+      final sw = Stopwatch()..start();
       final batchResults = await _classifySmsBatch(batch);
+      sw.stop();
+      onLog?.call(
+        '[AI] Batch ${i + 1}/${batches.length} (${batch.length} SMS) '
+        '→ ${batchResults.length} txns in ${sw.elapsedMilliseconds} ms\n',
+      );
       results.addAll(batchResults);
       completed += batch.length;
       onProgress?.call(completed, candidates.length);

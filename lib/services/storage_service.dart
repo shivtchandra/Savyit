@@ -29,6 +29,10 @@ class StorageService {
   static const _keySplitExpenses = 'ml_split_expenses';
   static const _keySplitRecurringTemplates = 'ml_split_recurring_templates';
   static const _keyEngagementNotifs = 'ml_engagement_notifs';
+  /// Last calendar day (inclusive) fully covered by an SMS inbox scan (`yyyy-MM-dd`).
+  static const _keySmsScanCursor = 'ml_sms_scan_cursor';
+  /// When true (default), `load()` only reads SMS from the day after this cursor through the UI range end.
+  static const _keyIncrementalSmsScan = 'ml_incremental_sms_scan';
 
   // ── Transactions ──────────────────────────────────────────────
   static Future<void> saveTransactions(List<Transaction> txns) async {
@@ -302,6 +306,42 @@ class StorageService {
   static Future<void> clearAll() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
+  }
+
+  // ── SMS scan cursor (incremental inbox reads) ─────────────────
+  static Future<DateTime?> getSmsScanCursorEndInclusive() async {
+    final prefs = await SharedPreferences.getInstance();
+    final s = prefs.getString(_keySmsScanCursor);
+    if (s == null || s.isEmpty) return null;
+    try {
+      return DateTime.parse(s);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// Persists the last calendar day included in the completed scan window.
+  static Future<void> setSmsScanCursorEndInclusive(DateTime date) async {
+    final d = DateTime(date.year, date.month, date.day);
+    final s =
+        '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keySmsScanCursor, s);
+  }
+
+  static Future<void> clearSmsScanCursor() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_keySmsScanCursor);
+  }
+
+  static Future<bool> getIncrementalSmsScanEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_keyIncrementalSmsScan) ?? true;
+  }
+
+  static Future<void> setIncrementalSmsScanEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyIncrementalSmsScan, enabled);
   }
 
   // ── Mascot DNA ──────────────────────────────────────────────────
