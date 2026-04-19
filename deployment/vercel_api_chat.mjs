@@ -19,9 +19,11 @@ function parseServiceAccount() {
   if (!raw?.trim()) {
     throw new Error('Missing FIREBASE_SERVICE_ACCOUNT_JSON');
   }
+  // Strip BOM / accidental whitespace from Vercel UI paste
+  const trimmed = raw.trim().replace(/^\uFEFF/, '');
   let cred;
   try {
-    cred = JSON.parse(raw.trim());
+    cred = JSON.parse(trimmed);
   } catch (e) {
     throw new Error(
       `FIREBASE_SERVICE_ACCOUNT_JSON is not valid JSON: ${e?.message || e}`,
@@ -62,7 +64,13 @@ export default async function handler(req, res) {
     return;
   }
 
-  const authz = req.headers.authorization;
+  const authz = req.headers.authorization || req.headers.Authorization;
+  console.info(
+    '[api/chat] authorization header present=',
+    Boolean(authz),
+    'length=',
+    authz?.length ?? 0,
+  );
   if (!authz?.startsWith('Bearer ')) {
     res.status(401).json({ error: 'Missing Authorization Bearer token' });
     return;
@@ -72,6 +80,7 @@ export default async function handler(req, res) {
     res.status(401).json({ error: 'Empty Bearer token' });
     return;
   }
+  console.info('[api/chat] idToken length=', idToken.length);
 
   try {
     ensureFirebaseAdmin();
